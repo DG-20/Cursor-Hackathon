@@ -18,7 +18,9 @@ app.use(express.static(join(__dirname, 'public')));
 const hasAnthropic = () => !!process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_anthropic_key_here';
 const hasGemini    = () => !!process.env.GEMINI_API_KEY    && process.env.GEMINI_API_KEY    !== 'your_gemini_key_here';
 const hasOpenAI    = () => !!process.env.OPENAI_API_KEY    && process.env.OPENAI_API_KEY    !== 'your_openai_key_here';
-const hasAI        = () => hasAnthropic() || hasGemini();
+const hasGroq      = () => !!process.env.GROQ_API_KEY      && process.env.GROQ_API_KEY      !== 'your_groq_key_here';
+const hasOpenRouter= () => !!process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'your_openrouter_key_here';
+const hasAI        = () => hasAnthropic() || hasGemini() || hasGroq() || hasOpenRouter();
 
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
@@ -26,7 +28,7 @@ app.get('/api/health', (req, res) => {
     ok:       true,
     whisper:  hasOpenAI(),
     claude:   hasAI(),   // frontend just checks this flag — true for either AI
-    provider: hasAnthropic() ? 'anthropic' : hasGemini() ? 'gemini' : 'none',
+    provider: hasAnthropic() ? 'anthropic' : hasGemini() ? 'gemini' : hasGroq() ? 'groq' : hasOpenRouter() ? 'openrouter' : 'none',
   });
 });
 
@@ -199,6 +201,84 @@ app.get('/api/test-gemini', async (req, res) => {
   }
 });
 
+// ── Groq call (free, no card) ────────────────────────────────────────────────
+async function callGroq(text) {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user',   content: text },
+      ],
+      temperature: 0.7,
+      max_tokens: 1200,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error?.message || `Groq HTTP ${response.status}`);
+
+  const raw   = data.choices?.[0]?.message?.content || '';
+  console.log('[Groq] raw:', raw.slice(0, 150));
+  const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+  return JSON.parse(clean);
+}
+
+// ── OpenRouter call (free models available) ───────────────────────────────────
+async function callOpenRouter(text) {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'HTTP-Referer': 'http://localhost:3000',
+    },
+    body: JSON.stringify({
+      model: 'meta-llama/llama-3.1-8b-instruct:free',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user',   content: text },
+      ],
+      temperature: 0.7,
+      max_tokens: 1200,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error?.message || `OpenRouter HTTP ${response.status}`);
+
+  const raw   = data.choices?.[0]?.message?.content || '';
+  console.log('[OpenRouter] raw:', raw.slice(0, 150));
+  const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+  return JSON.parse(clean);
+}
+
+// ── Test Groq endpoint ────────────────────────────────────────────────────────
+app.get('/api/test-groq', async (req, res) => {
+  if (!hasGroq()) return res.json({ ok: false, error: 'No GROQ_API_KEY in .env' });
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: 'Reply with just: exhale is working' }],
+        max_tokens: 20,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) return res.json({ ok: false, status: response.status, error: data.error?.message });
+    res.json({ ok: true, response: data.choices?.[0]?.message?.content?.trim(), model: 'llama-3.3-70b-versatile' });
+  } catch (err) {
+    res.json({ ok: false, error: err.message });
+  }
+});
+
 // ── Whisper transcription ─────────────────────────────────────────────────────
 app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
   if (!hasOpenAI()) return res.status(400).json({ error: 'No OpenAI key configured' });
@@ -237,7 +317,10 @@ app.post('/api/analyse', async (req, res) => {
   if (!text?.trim()) return res.status(400).json({ error: 'No text provided' });
 
   try {
-    const parsed = hasAnthropic() ? await callAnthropic(text) : await callGemini(text);
+    const parsed = hasAnthropic()   ? await callAnthropic(text)
+                 : hasGemini()      ? await callGemini(text)
+                 : hasGroq()        ? await callGroq(text)
+                 : await callOpenRouter(text);
 
     // Normalise actions — ensure every action has a stable id + estimatedTime
     // (AI sometimes omits these fields)
@@ -262,7 +345,7 @@ app.post('/api/analyse', async (req, res) => {
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(port, () => {
-  const provider = hasAnthropic() ? 'anthropic (claude)' : hasGemini() ? 'google (gemini)' : 'not set — demo mode';
+  const provider = hasAnthropic() ? 'anthropic (claude)' : hasGemini() ? 'google (gemini)' : hasGroq() ? 'groq (llama 3.3)' : hasOpenRouter() ? 'openrouter (llama 3.1)' : 'not set — demo mode';
   console.log(`\n  ✦ exhale running → http://localhost:${port}\n`);
   console.log(`  ai      : ${provider}`);
   console.log(`  whisper : ${hasOpenAI() ? '✓ configured' : '✗ not set (using browser speech)'}\n`);
