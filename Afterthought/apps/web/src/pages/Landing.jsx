@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Mic, MicOff, Type } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
+import processTranscript from '../api/session';
 
 export default function Landing() {
   const [inputMode, setInputMode] = useState('voice');
