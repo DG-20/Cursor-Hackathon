@@ -22,6 +22,7 @@ export default function Landing() {
     };
   }, []);
 
+  // Start recording
   const startRecording = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -38,6 +39,7 @@ export default function Landing() {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
+    // On result, update transcript
     recognition.onresult = (event) => {
       let finalTranscript = '';
       for (let i = 0; i < event.results.length; i++) {
@@ -48,20 +50,24 @@ export default function Landing() {
       if (finalTranscript.trim()) setTranscript(finalTranscript.trim());
     };
 
+    // On error, set error and stop recording
     recognition.onerror = (event) => {
       setError(`Microphone error: ${event.error}. Please check your permissions.`);
       setIsRecording(false);
     };
 
+    // On end, stop recording
     recognition.onend = () => {
       setIsRecording(false);
     };
 
+    // Start recording
     recognitionRef.current = recognition;
     recognition.start();
     setIsRecording(true);
   };
 
+  // Stop recording
   const stopRecording = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
@@ -70,6 +76,7 @@ export default function Landing() {
     setIsRecording(false);
   };
 
+  // Handle mic click
   const handleMicClick = () => {
     if (isRecording) {
       stopRecording();
@@ -78,6 +85,7 @@ export default function Landing() {
     }
   };
 
+  // Handle submit
   const handleSubmit = async () => {
     const input = inputMode === 'voice' ? transcript : textInput;
     if (!input.trim()) return;

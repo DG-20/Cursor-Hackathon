@@ -1,4 +1,4 @@
-export async function processTranscript(transcript) {
+export default async function processTranscript(transcript) {
     const response = await fetch('http://localhost:8080/processSpeech', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
