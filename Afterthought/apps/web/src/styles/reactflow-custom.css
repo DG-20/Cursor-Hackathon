@@ -1,0 +1,34 @@
+/* Custom ReactFlow styles for Clarity dark theme */
+.react-flow__node {
+    font-family: var(--font-sans);
+  }
+  
+  .react-flow__controls {
+    background: var(--clarity-glass-bg) !important;
+    border: 1px solid var(--clarity-glass-border) !important;
+  }
+  
+  .react-flow__controls button {
+    background: transparent !important;
+    border-bottom: 1px solid var(--clarity-glass-border) !important;
+    color: var(--clarity-text-secondary) !important;
+  }
+  
+  .react-flow__controls button:hover {
+    background: var(--clarity-glass-bg) !important;
+    color: var(--clarity-text-primary) !important;
+  }
+  
+  .react-flow__controls button:last-child {
+    border-bottom: none !important;
+  }
+  
+  .react-flow__minimap {
+    background: var(--clarity-glass-bg) !important;
+    border: 1px solid var(--clarity-glass-border) !important;
+  }
+  
+  .react-flow__attribution {
+    display: none;
+  }
+  

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "checkJs": false,
+    "maxNodeModuleDepth": 1
+  },
+  "include": ["src", "vite.config.js", "index.html"],
+  "exclude": ["node_modules", "dist"]
+}
