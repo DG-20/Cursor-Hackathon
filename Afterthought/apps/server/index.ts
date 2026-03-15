@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import { supabase } from './src/lib/supabase.js'
-// import sessionRoutes from './routes/session.js'
+import sessionRoutes from './routes/session'
 // import journalRoutes from './routes/journal.js'
 
 const app = express()
@@ -11,8 +10,8 @@ const PORT = process.env.PORT || 8080
 app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json())
 
-// Routes
-// app.use('/api/session', sessionRoutes)
+// Routes — frontend calls POST /processSpeech with { transcript }
+app.use('/', sessionRoutes)
 // app.use('/api/journal', journalRoutes)
 
 // Health check

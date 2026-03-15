@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Mic, MicOff, Type } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
-import processTranscript from '../api/session';
+import processTranscript from '../api/session.js';
 
 export default function Landing() {
   const [inputMode, setInputMode] = useState('voice');
@@ -13,7 +13,7 @@ export default function Landing() {
   const [error, setError] = useState(null);
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
-  const { startSession } = useSession();
+  const { startSession, completeSession } = useSession();
 
   // Cleanup on unmount
   useEffect(() => {
@@ -98,8 +98,8 @@ export default function Landing() {
         processTranscript(input),
         new Promise(resolve => setTimeout(resolve, 3000))
       ]);
-  
-      completeSession(data.tasks);
+
+      completeSession(data);
       navigate('/results/list');
     } catch (err) {
       setError('Failed to process your input. Please try again.');

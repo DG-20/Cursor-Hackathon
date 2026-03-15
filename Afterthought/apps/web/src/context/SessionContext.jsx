@@ -119,10 +119,13 @@ export const SessionProvider = ({ children }) => {
     });
   };
 
-  const completeSession = (tasks) => {
+  const completeSession = (data) => {
+    const tasks = Array.isArray(data?.tasks) ? data.tasks : [];
+    const journal = data?.journal && typeof data.journal === 'object' ? data.journal : null;
     setCurrentSession(prev => ({
       ...prev,
       tasks,
+      journal: journal ?? prev?.journal ?? null,
       isLoading: false,
     }));
   };
