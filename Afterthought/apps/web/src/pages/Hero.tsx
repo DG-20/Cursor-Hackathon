@@ -80,7 +80,7 @@ export default function Landing() {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-4xl flex flex-col items-center">
 
         {/* Logo */}
         <motion.div
@@ -189,7 +189,7 @@ export default function Landing() {
           initial={{ opacity: 0, scaleX: 0 }}
           animate={{ opacity: 1, scaleX: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="w-full mb-8"
+          className="w-full max-w-md mb-10"
           style={{
             height: '1px',
             background: 'linear-gradient(to right, transparent, rgba(95, 120, 80, 0.2), transparent)',
@@ -201,7 +201,7 @@ export default function Landing() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="w-full grid grid-cols-2 gap-2.5 mb-10"
+          className="w-full grid grid-cols-4 gap-3.5 mb-12"
         >
           {features.map((feature, i) => (
             <motion.div
@@ -209,7 +209,7 @@ export default function Landing() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.85 + i * 0.07 }}
-              className="flex flex-col gap-3 px-4 py-4 rounded-2xl"
+              className="flex flex-col gap-3.5 px-5 py-5 rounded-2xl"
               style={{
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid rgba(95, 120, 80, 0.1)',
@@ -217,16 +217,16 @@ export default function Landing() {
               }}
             >
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                className="w-9 h-9 rounded-lg flex items-center justify-center"
                 style={{ background: 'rgba(75, 115, 65, 0.15)' }}
               >
-                <feature.icon size={14} style={{ color: 'rgba(95, 145, 85, 0.9)' }} />
+                <feature.icon size={18} style={{ color: 'rgba(95, 145, 85, 0.9)' }} />
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(210, 225, 200, 0.85)', fontWeight: '500', marginBottom: '0.25rem' }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1.0625rem', color: 'rgba(210, 225, 200, 0.85)', fontWeight: '500', marginBottom: '0.3rem' }}>
                   {feature.title}
                 </p>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '300', lineHeight: '1.5' }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9375rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '300', lineHeight: '1.5' }}>
                   {feature.description}
                 </p>
               </div>
@@ -239,17 +239,18 @@ export default function Landing() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="w-full flex gap-3"
+          className="w-full max-w-md flex gap-4"
         >
           <button
             onClick={() => setShowModal(true)}
-            className="flex-1 py-3.5 rounded-2xl transition-all duration-300"
+            className="flex-1 rounded-2xl transition-all duration-300"
             style={{
+              padding: '1.1rem 1.5rem',
               background: 'linear-gradient(135deg, rgba(75, 115, 65, 0.85) 0%, rgba(55, 90, 50, 0.9) 100%)',
               color: 'rgba(220, 235, 210, 0.95)',
               fontFamily: 'var(--font-sans)',
               fontWeight: '500',
-              fontSize: '0.9375rem',
+              fontSize: '1.125rem',
               border: '1px solid rgba(95, 120, 80, 0.2)',
               boxShadow: '0 4px 20px rgba(55, 90, 50, 0.15)',
             }}
@@ -258,14 +259,15 @@ export default function Landing() {
           </button>
           <button
             onClick={() => navigate('/sign-in')}
-            className="flex-1 py-3.5 rounded-2xl transition-all duration-300"
+            className="flex-1 rounded-2xl transition-all duration-300"
             style={{
+              padding: '1.1rem 1.5rem',
               background: 'rgba(255, 255, 255, 0.03)',
               border: '1px solid rgba(95, 120, 80, 0.12)',
               color: 'rgba(190, 210, 180, 0.7)',
               fontFamily: 'var(--font-sans)',
               fontWeight: '400',
-              fontSize: '0.9375rem',
+              fontSize: '1.125rem',
             }}
           >
             Sign In
