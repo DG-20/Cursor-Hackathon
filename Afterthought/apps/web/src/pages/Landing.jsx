@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Mic, MicOff, Type } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
+import { useAuth } from '../context/AuthContext';
 import processTranscript from '../api/session.js';
 
 export default function Landing() {
@@ -14,6 +15,7 @@ export default function Landing() {
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
   const { startSession, completeSession } = useSession();
+  const { user } = useAuth();
 
   // Cleanup on unmount
   useEffect(() => {
@@ -109,8 +111,36 @@ export default function Landing() {
   const activeInput = inputMode === 'voice' ? transcript : textInput;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
+    <div
+      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
+      style={{ background: '#0d1f1e' }}
+    >
+      {/* Background orbs — same as SignUp/Hero */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '500px', height: '500px',
+            top: '-150px', left: '-150px',
+            background: 'radial-gradient(circle, rgba(56, 178, 172, 0.1) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+          animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '500px', height: '500px',
+            bottom: '-150px', right: '-150px',
+            background: 'radial-gradient(circle, rgba(104, 157, 140, 0.08) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+          animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
+          transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+      <div className="relative z-10 w-full max-w-md">
 
         {/* Logo */}
         <motion.div
@@ -119,7 +149,7 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-2xl tracking-wide" style={{ fontFamily: 'var(--font-serif)', color: 'var(--clarity-text-primary)' }}>
+          <h2 className="text-2xl tracking-wide" style={{ fontFamily: 'var(--font-serif)', color: '#e8ede8' }}>
             AfterThought
           </h2>
         </motion.div>
@@ -134,11 +164,13 @@ export default function Landing() {
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
             lineHeight: '1.3',
-            color: 'var(--clarity-text-primary)',
+            color: '#e8ede8',
             fontWeight: '400'
           }}
         >
-          What's on your mind today?
+          {user
+            ? `Hey ${user.first_name || user.email?.split('@')[0] || 'you'}, what's on your mind?`
+            : "What's on your mind today?"}
         </motion.h1>
 
         {/* Voice Input */}
@@ -155,7 +187,7 @@ export default function Landing() {
               {isRecording && (
                 <motion.div
                   className="absolute inset-0 rounded-full"
-                  style={{ background: 'radial-gradient(circle, var(--clarity-indigo-glow) 0%, transparent 70%)' }}
+                  style={{ background: 'radial-gradient(circle, rgba(80, 160, 145, 0.4) 0%, transparent 70%)' }}
                   animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.2, 0.5] }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
@@ -166,7 +198,7 @@ export default function Landing() {
                 <motion.div
                   key={index}
                   className="absolute inset-0 rounded-full border"
-                  style={{ borderColor: 'var(--clarity-indigo)', borderWidth: '1px' }}
+                  style={{ borderColor: 'rgba(104, 178, 160, 0.5)', borderWidth: '1px' }}
                   animate={{ scale: [1, 1.5 + index * 0.3], opacity: [0.6, 0] }}
                   transition={{ duration: 2, repeat: Infinity, delay: index * 0.4, ease: 'easeOut' }}
                 />
@@ -176,10 +208,10 @@ export default function Landing() {
               <div
                 className="relative w-32 h-32 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
                 style={{
-                  background: isRecording ? '#ef4444' : 'var(--clarity-indigo)',
+                  background: isRecording ? '#ef4444' : 'linear-gradient(135deg, rgba(80, 160, 145, 0.9) 0%, rgba(56, 130, 120, 0.95) 100%)',
                   boxShadow: isRecording
                     ? '0 0 40px rgba(239,68,68,0.3), 0 0 80px rgba(239,68,68,0.15)'
-                    : '0 0 40px var(--clarity-indigo-glow), 0 0 80px var(--clarity-indigo-glow)',
+                    : '0 0 50px rgba(80, 160, 145, 0.2), 0 0 100px rgba(56, 130, 120, 0.1)',
                 }}
               >
                 {isRecording
@@ -195,7 +227,7 @@ export default function Landing() {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '0.875rem',
-                color: 'var(--clarity-text-secondary)',
+                color: 'rgba(160, 200, 185, 0.6)',
                 fontWeight: '300',
               }}
             >
@@ -209,15 +241,15 @@ export default function Landing() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-6 w-full px-5 py-4 rounded-2xl"
                 style={{
-                  background: 'var(--clarity-glass-bg)',
-                  border: '1px solid var(--clarity-glass-border)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(104, 178, 160, 0.12)',
                   backdropFilter: 'blur(10px)',
                 }}
               >
                 <p style={{
                   fontFamily: 'var(--font-sans)',
                   fontSize: '0.9rem',
-                  color: 'var(--clarity-text-secondary)',
+                  color: 'rgba(200, 220, 210, 0.85)',
                   fontWeight: '300',
                   lineHeight: '1.6'
                 }}>
@@ -226,7 +258,7 @@ export default function Landing() {
                 <button
                   onClick={() => setTranscript('')}
                   className="mt-3 text-xs"
-                  style={{ color: 'var(--clarity-text-muted)' }}
+                  style={{ color: 'rgba(140, 180, 165, 0.5)' }}
                 >
                   Clear
                 </button>
@@ -235,7 +267,7 @@ export default function Landing() {
 
             {/* Error */}
             {error && (
-              <p className="mt-4 text-sm text-red-400 text-center">{error}</p>
+              <p className="mt-4 text-sm text-center" style={{ color: 'rgba(240, 150, 130, 0.85)' }}>{error}</p>
             )}
 
             {/* Submit — shows once there's a transcript */}
@@ -246,10 +278,11 @@ export default function Landing() {
                 onClick={handleSubmit}
                 className="w-full mt-6 py-4 rounded-2xl transition-all duration-300"
                 style={{
-                  background: 'var(--clarity-indigo)',
-                  color: '#ffffff',
+                  background: 'linear-gradient(135deg, rgba(80, 160, 145, 0.85) 0%, rgba(56, 130, 120, 0.9) 100%)',
+                  color: 'rgba(230, 245, 240, 0.95)',
                   fontFamily: 'var(--font-sans)',
                   fontWeight: '500',
+                  border: '1px solid rgba(104, 178, 160, 0.2)',
                 }}
               >
                 Clear my head →
@@ -272,9 +305,9 @@ export default function Landing() {
               placeholder="Type what's on your mind..."
               className="w-full h-48 px-6 py-4 rounded-2xl resize-none focus:outline-none transition-all duration-300"
               style={{
-                background: 'var(--clarity-glass-bg)',
-                border: '1px solid var(--clarity-glass-border)',
-                color: 'var(--clarity-text-primary)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(104, 178, 160, 0.12)',
+                color: '#deeee6',
                 fontFamily: 'var(--font-sans)',
                 fontSize: '1rem',
                 fontWeight: '300',
@@ -286,10 +319,11 @@ export default function Landing() {
               disabled={!textInput.trim()}
               className="w-full mt-4 py-4 rounded-2xl transition-all duration-300 disabled:opacity-40"
               style={{
-                background: 'var(--clarity-indigo)',
-                color: '#ffffff',
+                background: 'linear-gradient(135deg, rgba(80, 160, 145, 0.85) 0%, rgba(56, 130, 120, 0.9) 100%)',
+                color: 'rgba(230, 245, 240, 0.95)',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: '500',
+                border: '1px solid rgba(104, 178, 160, 0.2)',
               }}
             >
               Continue
@@ -310,7 +344,7 @@ export default function Landing() {
           }}
           className="flex items-center justify-center gap-2 mx-auto group"
           style={{
-            color: 'var(--clarity-text-muted)',
+            color: 'rgba(140, 180, 165, 0.5)',
             fontFamily: 'var(--font-sans)',
             fontSize: '0.875rem',
             fontWeight: '300',
@@ -319,12 +353,12 @@ export default function Landing() {
           {inputMode === 'voice' ? (
             <>
               <Type size={16} />
-              <span className="group-hover:text-[var(--clarity-text-secondary)] transition-colors">or type instead</span>
+              <span className="group-hover:opacity-100 opacity-80 transition-opacity" style={{ color: 'rgba(160, 200, 185, 0.7)' }}>or type instead</span>
             </>
           ) : (
             <>
               <Mic size={16} />
-              <span className="group-hover:text-[var(--clarity-text-secondary)] transition-colors">or use voice</span>
+              <span className="group-hover:opacity-100 opacity-80 transition-opacity" style={{ color: 'rgba(160, 200, 185, 0.7)' }}>or use voice</span>
             </>
           )}
         </motion.button>

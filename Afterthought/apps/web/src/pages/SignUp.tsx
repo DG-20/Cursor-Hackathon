@@ -1,9 +1,9 @@
-// SignUp.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import {signUp} from "../api/session";
+import { signUp as signUpApi } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
@@ -14,15 +14,16 @@ export default function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { setAuth } = useAuth();
 
-    const passwordTooShort = password.length > 0 && password.length < 8;
+    const passwordTooShort = password.length > 0 && password.length < 6;
     const passwordsMatch = confirmPassword.length > 0 && password === confirmPassword;
     const passwordsMismatch = confirmPassword.length > 0 && password !== confirmPassword;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password.length < 8) {
-            setError('Password must be at least 8 characters.');
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters.');
             return;
         }
         if (password !== confirmPassword) {
@@ -32,10 +33,21 @@ export default function SignUp() {
         setIsLoading(true);
         setError(null);
         try {
-            // TODO: wire up Supabase auth
-            navigate('/app');
+            const data = await signUpApi({
+                email: email.trim(),
+                password,
+                confirm_password: confirmPassword,
+                first_name: name.trim() || email.trim().split('@')[0],
+            });
+            if (data.user && data.session) {
+                setAuth(data.user, data.session);
+                navigate('/');
+                window.location.reload();
+            } else {
+                setError(data.message || 'Check your email to confirm sign up.');
+            }
         } catch (err) {
-            setError(err.message || 'Something went wrong.');
+            setError(err?.message || 'Something went wrong.');
         } finally {
             setIsLoading(false);
         }
@@ -196,7 +208,7 @@ export default function SignUp() {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Min. 8 characters"
+                                placeholder="Min. 6 characters"
                                 required
                                 className="w-full px-4 py-3.5 rounded-xl focus:outline-none transition-all duration-300"
                                 style={{
@@ -312,7 +324,7 @@ export default function SignUp() {
                 >
                     Already have an account?{' '}
                     <Link
-                        to="/signin"
+                        to="/sign-in"
                         style={{ color: 'rgba(120, 190, 170, 0.8)', textDecoration: 'none', fontWeight: '400' }}
                     >
                         Sign in
