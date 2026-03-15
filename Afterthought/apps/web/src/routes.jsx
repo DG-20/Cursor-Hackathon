@@ -2,16 +2,17 @@ import { createBrowserRouter } from 'react-router';
 import Landing from './pages/Landing';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
-// import Loading from './screens/Loading';
-// import ResultsList from './screens/ResultsList';
-// import ResultsKanban from './screens/ResultsKanban';
-// import ResultsMindMap from './screens/ResultsMindMap';
-// import Journal from './screens/Journal';
-// import NotFound from './screens/NotFound';
+import Hero from './pages/Hero';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 export const router = createBrowserRouter([
   {
     path: '/',
+    Component: Hero,
+  },
+  {
+    path: '/landing',
     Component: Landing,
   },
   {
@@ -22,6 +23,14 @@ export const router = createBrowserRouter([
     path: '/results/list',
     Component: ResultsList,
   },
+  {
+    path: '/signup',
+    Component: SignUp,
+  },
+  {
+    path: '/signin',
+    Component: SignIn,
+  }
 //   {
 //     path: '/results/kanban',
 //     Component: ResultsKanban,
