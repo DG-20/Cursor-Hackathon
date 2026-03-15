@@ -59,25 +59,20 @@ function generateWordData(words) {
       fontSize: 0.75 + Math.abs(Math.sin(a * 0.4)) * 0.9,
       opacity: 0.35 + Math.abs(Math.sin(a * 0.6)) * 0.5,
       color: i % 4 === 0
-        ? 'rgba(180, 230, 210, 0.95)'
+        ? 'rgba(170, 210, 160, 0.95)'
         : i % 4 === 1
-          ? 'rgba(120, 190, 170, 0.85)'
+          ? 'rgba(95, 145, 85, 0.85)'
           : i % 4 === 2
-            ? 'rgba(80, 160, 145, 0.75)'
-            : 'rgba(210, 240, 225, 0.65)',
+            ? 'rgba(75, 115, 65, 0.75)'
+            : 'rgba(200, 220, 185, 0.65)',
     };
   });
 }
 
-// Phases:
-// 'storm'    — words flying, messages showing
-// 'fading'   — overlay fades in over words
-// 'farewell' — phrase appears in center
-// 'done'     — navigate away
 const PHASE_TIMINGS = {
-  fading: 3400,     // start fade after 3.4s
-  farewell: 4400,   // show phrase after fade completes (1s fade)
-  navigate: 6800,   // navigate after phrase has been visible for ~2.4s
+  fading: 3400,
+  farewell: 4400,
+  navigate: 6800,
 };
 
 export default function Loading() {
@@ -94,14 +89,12 @@ export default function Loading() {
   const words = useMemo(() => extractWords(transcript), [transcript]);
   const wordData = useMemo(() => generateWordData(words), [words]);
 
-  // Watch for data arriving in context
   useEffect(() => {
     if (currentSession && !currentSession.isLoading && currentSession.tasks?.length > 0) {
       setDataReady(true);
     }
   }, [currentSession]);
 
-  // Cycle messages
   useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex(prev => (prev + 1) % loadingMessages.length);
@@ -109,28 +102,22 @@ export default function Loading() {
     return () => clearInterval(interval);
   }, []);
 
-  // Phase transitions — only start fading when BOTH timer AND data are ready
   useEffect(() => {
     if (!dataReady) return;
-
-    const fadeTimer = setTimeout(() => setPhase('fading'), 400); // short buffer after data arrives
+    const fadeTimer = setTimeout(() => setPhase('fading'), 400);
     return () => clearTimeout(fadeTimer);
   }, [dataReady]);
 
-  // Once fading starts, chain the rest
   useEffect(() => {
     if (phase !== 'fading') return;
-
     const farewellTimer = setTimeout(() => setPhase('farewell'), 1000);
     const navigateTimer = setTimeout(() => navigate('/results/list'), 2800);
-
     return () => {
       clearTimeout(farewellTimer);
       clearTimeout(navigateTimer);
     };
   }, [phase, navigate]);
 
-  // Fallback — if data never arrives (error), navigate after 12s
   useEffect(() => {
     const fallback = setTimeout(() => navigate('/results/list'), 12000);
     return () => clearTimeout(fallback);
@@ -141,7 +128,7 @@ export default function Loading() {
       style={{
         position: 'fixed',
         inset: 0,
-        background: '#0d1f1e',
+        background: '#141e16',
         overflow: 'hidden',
       }}
     >
@@ -152,7 +139,7 @@ export default function Loading() {
           position: 'absolute',
           width: '600px', height: '600px',
           top: '-200px', left: '-200px',
-          background: 'radial-gradient(circle, rgba(56, 178, 172, 0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(75, 120, 65, 0.12) 0%, transparent 70%)',
           filter: 'blur(60px)',
           borderRadius: '50%',
         }}
@@ -164,7 +151,7 @@ export default function Loading() {
           position: 'absolute',
           width: '700px', height: '700px',
           bottom: '-250px', right: '-250px',
-          background: 'radial-gradient(circle, rgba(104, 157, 140, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(110, 90, 60, 0.1) 0%, transparent 70%)',
           filter: 'blur(70px)',
           borderRadius: '50%',
         }}
@@ -229,7 +216,7 @@ export default function Loading() {
         ))}
       </AnimatePresence>
 
-      {/* FADE OVERLAY — slow radial wash */}
+      {/* FADE OVERLAY */}
       <AnimatePresence>
         {(phase === 'fading' || phase === 'farewell') && (
           <motion.div
@@ -241,7 +228,7 @@ export default function Loading() {
               position: 'fixed',
               inset: 0,
               zIndex: 20,
-              background: 'radial-gradient(ellipse at center, rgba(13,31,30,0.5) 0%, rgba(13,31,30,0.98) 75%)',
+              background: 'radial-gradient(ellipse at center, rgba(20,30,22,0.5) 0%, rgba(20,30,22,0.98) 75%)',
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
             }}
@@ -259,18 +246,17 @@ export default function Loading() {
           transition={{ duration: 1.1, ease: 'easeOut' }}
           style={{
             position: 'fixed',
-            inset: 0,                    // ← takes full viewport
+            inset: 0,
             zIndex: 30,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',   // ← centers vertically
+            justifyContent: 'center',
             gap: '16px',
-            padding: '0 32px',          // ← safe horizontal padding
+            padding: '0 32px',
             boxSizing: 'border-box',
           }}
         >
-            {/* Orb */}
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -279,8 +265,8 @@ export default function Loading() {
                 width: '52px',
                 height: '52px',
                 borderRadius: '50%',
-                background: 'radial-gradient(circle at 35% 35%, rgba(140, 215, 190, 0.95), rgba(52, 120, 110, 0.98))',
-                boxShadow: '0 0 40px rgba(80, 160, 145, 0.35), 0 0 80px rgba(56, 130, 120, 0.15)',
+                background: 'radial-gradient(circle at 35% 35%, rgba(130, 185, 120, 0.95), rgba(55, 90, 50, 0.98))',
+                boxShadow: '0 0 40px rgba(75, 115, 65, 0.35), 0 0 80px rgba(55, 90, 50, 0.15)',
                 marginBottom: '4px',
               }}
             >
@@ -291,7 +277,6 @@ export default function Loading() {
               />
             </motion.div>
 
-            {/* Heading */}
             <motion.h2
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -299,11 +284,11 @@ export default function Loading() {
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.5rem, 6vw, 2rem)',
-                color: '#deeee6',
+                color: '#dce8d8',
                 fontWeight: '400',
                 lineHeight: '1.3',
                 letterSpacing: '-0.01em',
-                whiteSpace: 'normal',      // ← was 'nowrap'
+                whiteSpace: 'normal',
                 maxWidth: '280px',
                 textAlign: 'center',
               }}
@@ -311,7 +296,6 @@ export default function Loading() {
               Clarity incoming.
             </motion.h2>
 
-            {/* Subtext */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -319,7 +303,7 @@ export default function Loading() {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '0.875rem',
-                color: 'rgba(150, 205, 182, 0.45)',
+                color: 'rgba(150, 170, 135, 0.45)',
                 fontWeight: '300',
                 letterSpacing: '0.03em',
                 textAlign: 'center',
@@ -328,7 +312,6 @@ export default function Loading() {
               your thoughts are sorted
             </motion.p>
 
-            {/* Subtext */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -336,7 +319,7 @@ export default function Loading() {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '0.9375rem',
-                color: 'rgba(150, 205, 182, 0.45)',
+                color: 'rgba(150, 170, 135, 0.45)',
                 fontWeight: '300',
                 letterSpacing: '0.03em',
               }}
@@ -374,7 +357,7 @@ export default function Loading() {
                 style={{
                   fontFamily: 'var(--font-serif)',
                   fontSize: '1rem',
-                  color: 'rgba(160, 210, 190, 0.55)',
+                  color: 'rgba(150, 170, 135, 0.55)',
                   fontWeight: '400',
                   fontStyle: 'italic',
                   textAlign: 'center',
@@ -394,8 +377,8 @@ export default function Loading() {
                     height: '4px',
                     borderRadius: '50%',
                     background: i === messageIndex
-                      ? 'rgba(120, 190, 170, 0.8)'
-                      : 'rgba(120, 190, 170, 0.2)',
+                      ? 'rgba(95, 145, 85, 0.8)'
+                      : 'rgba(95, 145, 85, 0.2)',
                   }}
                   animate={{ scale: i === messageIndex ? 1.4 : 1 }}
                   transition={{ duration: 0.3 }}
