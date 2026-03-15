@@ -89,18 +89,17 @@ export default function Landing() {
   const handleSubmit = async () => {
     const input = inputMode === 'voice' ? transcript : textInput;
     if (!input.trim()) return;
-  
+
     startSession(input);
-    navigate('/loading');
-  
+    navigate('/loading', { state: { transcript: input } });
+
     try {
       const [data] = await Promise.all([
         processTranscript(input),
-        new Promise(resolve => setTimeout(resolve, 3000))
+        new Promise(resolve => setTimeout(resolve, 500)) // just enough to not block
       ]);
 
-      completeSession(data);
-      navigate('/results/list');
+      completeSession(data); // store in context — don't navigate yet
     } catch (err) {
       setError('Failed to process your input. Please try again.');
       navigate('/');
