@@ -5,6 +5,7 @@ import ResultsList from './pages/ResultsList';
 import Hero from './pages/Hero';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import Journal from './pages/Journal';
 
 export const router = createBrowserRouter([
   {
@@ -30,21 +31,26 @@ export const router = createBrowserRouter([
   {
     path: '/signin',
     Component: SignIn,
+  },
+  {
+    path: '/journal',
+    Component: Journal,
   }
-//   {
-//     path: '/results/kanban',
-//     Component: ResultsKanban,
-//   },
-//   {
-//     path: '/results/mindmap',
-//     Component: ResultsMindMap,
-//   },
-//   {
-//     path: '/journal',
-//     Component: Journal,
-//   },
-//   {
-//     path: '*',
-//     Component: NotFound,
-//   },
+
+  //   {
+  //     path: '/results/kanban',
+  //     Component: ResultsKanban,
+  //   },
+  //   {
+  //     path: '/results/mindmap',
+  //     Component: ResultsMindMap,
+  //   },
+  //   {
+  //     path: '/journal',
+  //     Component: Journal,
+  //   },
+  //   {
+  //     path: '*',
+  //     Component: NotFound,
+  //   },
 ]);
