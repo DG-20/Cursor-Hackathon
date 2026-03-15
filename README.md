@@ -1,5 +1,7 @@
 # Cursor-Hackathon
 
+![AfterThought Logo](Images/afterthought1.jpg)
+
 ## Inspiration
 The inspiration for our project originated from experiences balancing workloads distributed across various facets of life. We found that a natural flow from mental regulation, planning, and a call for action are all equally important to equip an individual to face all their battles one after another. Everyone gets stuck at various points in the process of progressing, and often times it's the work that comes before the actual work. AfterThought aims to live up to its name by transforming your challenges into a path and helping you take the hardest step - the first one.
 
@@ -22,3 +24,12 @@ Our team learned a lot more about working with AI integration into full-stack ap
 - Integration with other productivity tools to allow for a centralized user experience and collaboration.
 - Greater personalization to better break down tasks in whatever way is best suited to the individual's needs.
 - Back-and-forth discussions to allow users to go into greater depth on major points of concern.
+
+## Images of Afterthought
+![AfterThought Logo](Images/afterthought2.png)
+
+![AfterThought Logo](Images/afterthought3.png)
+
+![AfterThought Logo](Images/afterthought4.png)
+
+![AfterThought Logo](Images/afterthought5.png)
