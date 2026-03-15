@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
 import Journal from './pages/Journal';
+import Landing from './pages/Hero';
 
 export const router = createBrowserRouter([
   { path: '/', Component: HomePage },

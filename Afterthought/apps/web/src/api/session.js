@@ -1,8 +1,8 @@
-export default async function processTranscript(transcript) {
+export async function processTranscript(user_id, transcript) {
   const response = await fetch('http://localhost:8080/processSpeech', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ transcript })
+    body: JSON.stringify({ user_id, transcript })
   });
 
   if (!response.ok) {
@@ -12,11 +12,11 @@ export default async function processTranscript(transcript) {
   return response.json();
 }
 
-export async function getSessions() {
+export async function getSessions(userId) {
   const response = await fetch('http://localhost:8080/getSessions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ })
+    body: JSON.stringify({'userId': userId})
   });
 
   if (!response.ok) {

@@ -3,19 +3,22 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowLeft, Sparkles, ChevronRight, Calendar } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
-import { getSessions } from '../api/session';
+import { getSessions } from '../api/session.js';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Journal() {
     const navigate = useNavigate();
     const { currentSession } = useSession();
     const [pastSessions, setPastSessions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const { user } = useAuth();
 
     // Fetch last 7 sessions from backend
     useEffect(() => {
         async function fetchSessions() {
           try {
-            const data = await getSessions();
+            console.log(user.id);
+            const data = await getSessions(user.id);
             setPastSessions(data.slice(0, 7));
           } catch (err) {
             console.error('Failed to fetch sessions:', err);
