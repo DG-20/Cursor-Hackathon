@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
+import { EARTH } from '@/styles/EARTH';
 
 const priorityColors = {
   urgent: 'rgba(180, 100, 70, 0.92)',
@@ -125,7 +126,7 @@ export default function ResultsList() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => navigate('/results/mindmap')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
+            className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
             style={{
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(95, 120, 80, 0.12)',
@@ -135,19 +136,32 @@ export default function ResultsList() {
             }}
           >
             <ArrowLeft size={16} />
-            Back to Map
+            Map
           </button>
           <div
             className="flex items-center gap-3"
             style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(190, 210, 180, 0.8)' }}
           >
-            <span className="font-medium">
-              {user?.first_name || user?.email?.split('@')[0] || 'You'}
-            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/landing')}
+              className="px-3 py-2 rounded-lg transition-all cursor-pointer duration-200"
+              style={{
+                background: 'rgba(75, 120, 65, 0.15)',
+                border: `1px solid ${EARTH.border}`,
+                color: 'rgba(130, 175, 120, 0.8)',
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.8125rem',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.28)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.15)'}
+            >
+              + New Session
+            </button>
             <button
               type="button"
               onClick={handleSignOut}
-              className="hover:underline"
+              className="hover:underline cursor-pointer"
             >
               Sign out
             </button>
@@ -175,7 +189,7 @@ export default function ResultsList() {
             textAlign: 'center',
           }}
         >
-          {new Date().toLocaleDateString('en-US', { 
+          {new Date().toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',

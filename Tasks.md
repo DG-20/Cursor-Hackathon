@@ -1,4 +1,4 @@
-# Clarity — Project Brief
+# After Thought — Project Brief
 > A 24-hour hackathon project. An AI-powered brain dump tool that helps overwhelmed people work smarter by organizing their thoughts, managing their tasks, and reflecting on their progress.
 
 ---

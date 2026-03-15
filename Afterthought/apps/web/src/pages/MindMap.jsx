@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
+import { EARTH } from '@/styles/EARTH';
 
 // Earthy greens & browns — forest floor palette
 const priorityColors = {
@@ -11,23 +12,6 @@ const priorityColors = {
   high: 'rgba(95, 145, 85, 0.9)',       // forest green
   medium: 'rgba(155, 140, 100, 0.85)',  // driftwood
   low: 'rgba(110, 130, 95, 0.7)',       // fern
-};
-
-const EARTH = {
-  bg: '#141e16',                                       // deep forest dark
-  bgCard: 'rgba(22, 32, 24, 0.94)',                   // mossy dark
-  border: 'rgba(95, 120, 80, 0.25)',                   // sage border
-  borderMuted: 'rgba(95, 120, 80, 0.12)',              // subtle sage
-  text: '#dce8d8',                                     // soft leaf white
-  textMuted: 'rgba(190, 210, 180, 0.85)',              // faded leaf
-  textDim: 'rgba(150, 170, 135, 0.6)',                 // distant moss
-  centerFill: ['rgba(75, 115, 65, 0.45)', 'rgba(55, 90, 50, 0.55)'], // deep green gradient
-  centerStroke: 'rgba(85, 130, 70, 0.5)',              // green glow
-  edge: 'rgba(100, 125, 85, 0.2)',                     // vine
-  edgeFlow: 'rgba(120, 150, 95, 0.3)',                 // flowing vine
-  nodeDone: 'rgba(110, 145, 90, 0.55)',                // completed green
-  orb1: 'rgba(75, 120, 65, 0.1)',                      // forest orb
-  orb2: 'rgba(110, 90, 60, 0.07)',                     // soil orb
 };
 
 const CENTER_R = 260;
@@ -205,12 +189,12 @@ export default function MindMap() {
 
   const tasks = hideCompleted
     ? currentSession.tasks.filter(t => {
-        if (t.subtasks?.length) {
-          const done = t.subtasks.filter(s => s.completed).length;
-          return done < t.subtasks.length;
-        }
-        return !t.completed;
-      })
+      if (t.subtasks?.length) {
+        const done = t.subtasks.filter(s => s.completed).length;
+        return done < t.subtasks.length;
+      }
+      return !t.completed;
+    })
     : currentSession.tasks;
 
   const { taskPositions, subtaskPositions } = useLayout(tasks);
@@ -269,7 +253,7 @@ export default function MindMap() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/results/list')}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300"
+            className="flex cursor-pointer  items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300"
             style={{
               background: 'rgba(255, 255, 255, 0.04)',
               border: `1px solid ${EARTH.borderMuted}`,
@@ -283,7 +267,7 @@ export default function MindMap() {
           </button>
           <button
             onClick={() => setHideCompleted(!hideCompleted)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300"
+            className="flex items-center cursor-pointer  gap-2 px-3 py-2 rounded-lg transition-all duration-300"
             style={{
               background: hideCompleted ? 'rgba(75, 120, 65, 0.2)' : 'rgba(255, 255, 255, 0.04)',
               border: `1px solid ${EARTH.border}`,
@@ -297,8 +281,23 @@ export default function MindMap() {
           </button>
         </div>
         <div className="flex items-center gap-3" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8125rem', color: EARTH.textMuted }}>
-          <span className="font-medium">{user?.first_name || user?.email?.split('@')[0] || 'You'}</span>
-          <button type="button" onClick={handleSignOut} className="hover:underline">Sign out</button>
+          <button
+            type="button"
+            onClick={() => navigate('/landing')}
+            className="px-3 py-2 rounded-lg transition-all cursor-pointer duration-200"
+            style={{
+              background: 'rgba(75, 120, 65, 0.15)',
+              border: `1px solid ${EARTH.border}`,
+              color: 'rgba(130, 175, 120, 0.8)',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.8125rem',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.28)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.15)'}
+          >
+            + New Session
+          </button>
+          <button type="button" onClick={handleSignOut} className="hover:underline cursor-pointer ">Sign out</button>
         </div>
       </div>
 

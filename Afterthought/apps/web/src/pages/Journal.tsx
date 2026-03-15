@@ -11,22 +11,22 @@ export default function Journal() {
     const { currentSession } = useSession();
     const [pastSessions, setPastSessions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
 
     useEffect(() => {
         async function fetchSessions() {
-          try {
-            console.log(user.id);
-            const data = await getSessions(user.id);
-            setPastSessions(data.slice(0, 7));
-          } catch (err) {
-            console.error('Failed to fetch sessions:', err);
-          } finally {
-            setIsLoading(false);
-          }
+            try {
+                console.log(user.id);
+                const data = await getSessions(user.id);
+                setPastSessions(data.slice(0, 7));
+            } catch (err) {
+                console.error('Failed to fetch sessions:', err);
+            } finally {
+                setIsLoading(false);
+            }
         }
         fetchSessions();
-      }, []);
+    }, []);
 
     const journalEntry = currentSession?.journal?.entry;
     const moodTags = currentSession?.journal?.moods ?? [];
@@ -96,12 +96,21 @@ export default function Journal() {
             </div>
 
             {/* Header */}
-            <div className="mb-8 relative z-10">
-                <div className="flex items-center justify-between mb-6">
+            <div
+                className="sticky top-0 z-10 px-6 py-4 mb-6 relative"
+                style={{
+                    background: 'rgba(20, 30, 22, 0.9)',
+                    borderBottom: '1px solid rgba(95, 120, 80, 0.12)',
+                    backdropFilter: 'blur(10px)',
+                }}
+            >
+                <div className="flex items-center justify-between mb-4">
                     <button
                         onClick={() => navigate('/results/list')}
-                        className="flex items-center gap-2 transition-all duration-300"
+                        className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
                         style={{
+                            background: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(95, 120, 80, 0.12)',
                             color: 'rgba(190, 210, 180, 0.8)',
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
@@ -110,14 +119,44 @@ export default function Journal() {
                         <ArrowLeft size={16} />
                         Back to Tasks
                     </button>
+                    <div
+                        className="flex items-center gap-3"
+                        style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(190, 210, 180, 0.8)' }}
+                    >
+                        <button
+                            type="button"
+                            onClick={() => navigate('/app')}
+                            className="px-3 py-2 rounded-lg transition-all cursor-pointer duration-200"
+                            style={{
+                                background: 'rgba(75, 120, 65, 0.15)',
+                                border: '1px solid rgba(95, 120, 80, 0.2)',
+                                color: 'rgba(130, 175, 120, 0.8)',
+                                fontFamily: 'var(--font-sans)',
+                                fontSize: '0.8125rem',
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.28)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.15)'}
+                        >
+                            + New Session
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => { navigate('/', { replace: true }); signOut(); window.location.reload(); }}
+                            className="hover:underline cursor-pointer"
+                        >
+                            Sign out
+                        </button>
+                    </div>
                 </div>
 
                 <h1
                     style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '2rem',
+                        fontSize: '1.75rem',
                         color: '#dce8d8',
-                        fontWeight: '400',
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        marginBottom: '0.5rem',
                     }}
                 >
                     Journal
@@ -251,14 +290,11 @@ export default function Journal() {
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.4, delay: 0.25 + i * 0.07 }}
-                                    className="flex items-center gap-4 px-4 py-4 rounded-2xl cursor-pointer group transition-all duration-200"
+                                    className="flex items-center gap-4 px-4 py-4 rounded-2xl group transition-all duration-200"
                                     style={{
                                         background: 'rgba(22, 32, 24, 0.7)',
                                         border: '1px solid rgba(95, 120, 80, 0.08)',
-                                    }}
-                                    onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.2)'}
-                                    onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.08)'}
-                                >
+                                    }}                                >
                                     <div
                                         style={{
                                             width: '10px',
@@ -340,55 +376,38 @@ export default function Journal() {
                         })}
                     </div>
                 )}
-
-                {!isLoading && pastSessions.length > 0 && (
-                    <motion.button
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.7 }}
-                        onClick={() => navigate('/history')}
-                        className="w-full mt-4 py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200"
-                        style={{
-                            background: 'transparent',
-                            border: '1px solid rgba(95, 120, 80, 0.12)',
-                            color: 'rgba(150, 170, 135, 0.6)',
-                            fontFamily: 'var(--font-sans)',
-                            fontSize: '0.875rem',
-                            fontWeight: '300',
-                        }}
-                        onMouseEnter={e => {
-                            e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.25)';
-                            e.currentTarget.style.color = 'rgba(190, 210, 180, 0.8)';
-                        }}
-                        onMouseLeave={e => {
-                            e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.12)';
-                            e.currentTarget.style.color = 'rgba(150, 170, 135, 0.6)';
-                        }}
-                    >
-                        <Calendar size={15} />
-                        View full history
-                    </motion.button>
-                )}
             </motion.div>
 
             {/* Bottom CTA */}
             <div
                 className="fixed bottom-0 left-0 right-0 px-6 py-4"
-                style={{ background: 'rgba(20, 30, 22, 0.95)', borderTop: '1px solid rgba(95, 120, 80, 0.08)' }}
+                style={{
+                    background: 'rgba(14, 22, 15, 0.98)',
+                    borderTop: '1px solid rgba(95, 120, 80, 0.12)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    zIndex: 50,
+                }}
             >
                 <button
-                    onClick={() => navigate('/')}
-                    className="w-full py-4 rounded-2xl transition-all duration-300"
+                    onClick={() => isLoading || pastSessions.length === 0 ? navigate('/') : navigate('/history')}
+                    className="w-full cursor-pointer py-4 rounded-2xl transition-all duration-300"
                     style={{
                         background: 'linear-gradient(135deg, rgba(75, 115, 65, 0.85) 0%, rgba(55, 90, 50, 0.9) 100%)',
-                        border: '1px solid rgba(95, 120, 80, 0.2)',
+                        border: '1px solid rgba(95, 120, 80, 0.25)',
                         color: 'rgba(220, 235, 210, 0.95)',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: '500',
                         fontSize: '0.9375rem',
                     }}
+                    onMouseEnter={e => {
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(85, 130, 75, 0.9) 0%, rgba(65, 100, 58, 0.95) 100%)';
+                    }}
+                    onMouseLeave={e => {
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(75, 115, 65, 0.85) 0%, rgba(55, 90, 50, 0.9) 100%)';
+                    }}
                 >
-                    Start New Session
+                    {isLoading ? 'Loading...' : pastSessions.length === 0 ? 'Start New Session' : 'View full history'}
                 </button>
             </div>
 
