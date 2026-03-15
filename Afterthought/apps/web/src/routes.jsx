@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import Landing from './pages/Landing';
+import Loading from './pages/Loading';
+import ResultsList from './pages/ResultsList';
 // import Loading from './screens/Loading';
 // import ResultsList from './screens/ResultsList';
 // import ResultsKanban from './screens/ResultsKanban';
@@ -12,14 +14,14 @@ export const router = createBrowserRouter([
     path: '/',
     Component: Landing,
   },
-//   {
-//     path: '/loading',
-//     Component: Loading,
-//   },
-//   {
-//     path: '/results/list',
-//     Component: ResultsList,
-//   },
+  {
+    path: '/loading',
+    Component: Loading,
+  },
+  {
+    path: '/results/list',
+    Component: ResultsList,
+  },
 //   {
 //     path: '/results/kanban',
 //     Component: ResultsKanban,
