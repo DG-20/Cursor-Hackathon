@@ -1,16 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Calendar, BookOpen, CheckCircle2, Circle, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
+import { BookOpen, CheckCircle2, Circle, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getSessions } from '../api/session';
-import { EARTH } from '@/styles/EARTH';
 
 const priorityColors = {
-    urgent: 'rgba(239, 100, 100, 0.9)',
-    high: 'rgba(239, 160, 80, 0.9)',
-    medium: 'rgba(234, 210, 80, 0.9)',
-    low: 'rgba(100, 200, 160, 0.9)',
+    urgent: 'rgba(180, 100, 70, 0.92)',
+    high: 'rgba(95, 145, 85, 0.9)',
+    medium: 'rgba(155, 140, 100, 0.85)',
+    low: 'rgba(110, 130, 95, 0.7)',
 };
 
 const priorityLabels = {
@@ -35,10 +34,10 @@ function calculateProgress(task) {
 }
 
 const statusConfig = {
-    done: { label: 'Done', color: 'rgba(100, 200, 160, 0.9)' },
-    'in-progress': { label: 'In Progress', color: 'rgba(120, 190, 170, 0.8)' },
-    'not-started': { label: 'Not Started', color: 'rgba(140, 170, 160, 0.5)' },
-    incomplete: { label: 'Incomplete', color: 'rgba(140, 170, 160, 0.5)' },
+    done: { label: 'Done', color: 'rgba(110, 145, 90, 0.95)' },
+    'in-progress': { label: 'In Progress', color: 'rgba(95, 145, 85, 0.9)' },
+    'not-started': { label: 'Not Started', color: 'rgba(150, 170, 135, 0.5)' },
+    incomplete: { label: 'Incomplete', color: 'rgba(150, 170, 135, 0.5)' },
 };
 
 function getPriorityKey(priority) {
@@ -80,9 +79,9 @@ function SessionCard({ session, index, sessionRef }) {
         const negative = ['anxious', 'overwhelmed', 'stressed', 'tired', 'frustrated', 'sad', 'angry'];
         const hasPos = moods.some(m => positive.includes(m));
         const hasNeg = moods.some(m => negative.includes(m));
-        if (hasPos && !hasNeg) return 'rgba(100, 200, 160, 0.9)';
-        if (hasNeg && !hasPos) return 'rgba(220, 130, 110, 0.8)';
-        return 'rgba(140, 190, 200, 0.7)';
+        if (hasPos && !hasNeg) return 'rgba(95, 145, 85, 0.8)';
+        if (hasNeg && !hasPos) return 'rgba(180, 100, 70, 0.7)';
+        return 'rgba(155, 140, 100, 0.7)';
     };
 
     return (
@@ -93,8 +92,8 @@ function SessionCard({ session, index, sessionRef }) {
             transition={{ duration: 0.5, delay: index * 0.07 }}
             className="rounded-2xl overflow-hidden scroll-mt-32"
             style={{
-                background: 'rgba(255, 255, 255, 0.025)',
-                border: '1px solid rgba(104, 178, 160, 0.1)',
+                background: 'rgba(22, 32, 24, 0.94)',
+                border: '1px solid rgba(95, 120, 80, 0.12)',
                 backdropFilter: 'blur(10px)',
             }}
         >
@@ -103,23 +102,19 @@ function SessionCard({ session, index, sessionRef }) {
                 {/* Header row */}
                 <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3">
-                        {/* Mood dot */}
                         <div
                             style={{
-                                width: '10px',
-                                height: '10px',
+                                width: '10px', height: '10px',
                                 borderRadius: '50%',
                                 background: getMoodDotColor(),
                                 boxShadow: `0 0 8px ${getMoodDotColor()}`,
-                                flexShrink: 0,
-                                marginTop: '4px',
+                                flexShrink: 0, marginTop: '4px',
                             }}
                         />
                         <div>
-                            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.0625rem', color: 'rgba(220, 235, 225, 0.9)', fontWeight: '400' }}>
+                            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.0625rem', color: '#dce8d8', fontWeight: '400' }}>
                                 {formatDate(session.created_at)}
                             </h3>
-                            {/* Mood tags */}
                             {moods.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                                     {moods.slice(0, 4).map((tag, i) => (
@@ -127,9 +122,9 @@ function SessionCard({ session, index, sessionRef }) {
                                             key={i}
                                             className="px-2 py-0.5 rounded-full text-xs capitalize"
                                             style={{
-                                                background: 'rgba(80, 160, 145, 0.1)',
-                                                border: '1px solid rgba(104, 178, 160, 0.12)',
-                                                color: 'rgba(140, 200, 178, 0.8)',
+                                                background: 'rgba(75, 115, 65, 0.12)',
+                                                border: '1px solid rgba(95, 120, 80, 0.15)',
+                                                color: 'rgba(130, 175, 120, 0.85)',
                                                 fontFamily: 'var(--font-sans)',
                                                 fontWeight: '300',
                                             }}
@@ -142,14 +137,13 @@ function SessionCard({ session, index, sessionRef }) {
                         </div>
                     </div>
 
-                    {/* Task stats */}
                     {hasTasks && (
                         <div className="text-right shrink-0">
-                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1.25rem', color: 'rgba(100, 200, 160, 0.9)', fontWeight: '500', lineHeight: 1 }}>
+                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1.25rem', color: 'rgba(110, 145, 90, 0.95)', fontWeight: '500', lineHeight: 1 }}>
                                 {taskStats.completed}
-                                <span style={{ fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.4)', fontWeight: '300' }}>/{taskStats.total}</span>
+                                <span style={{ fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.4)', fontWeight: '300' }}>/{taskStats.total}</span>
                             </p>
-                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: 'rgba(140, 180, 165, 0.4)', fontWeight: '300', marginTop: '2px' }}>
+                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', color: 'rgba(150, 170, 135, 0.4)', fontWeight: '300', marginTop: '2px' }}>
                                 tasks done
                             </p>
                         </div>
@@ -161,39 +155,42 @@ function SessionCard({ session, index, sessionRef }) {
                     <div
                         className="p-4 rounded-xl mb-4"
                         style={{
-                            background: 'rgba(80, 160, 145, 0.05)',
-                            border: '1px solid rgba(104, 178, 160, 0.1)',
+                            background: 'rgba(75, 115, 65, 0.06)',
+                            border: '1px solid rgba(95, 120, 80, 0.15)',
                         }}
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <BookOpen size={13} style={{ color: 'rgba(120, 190, 170, 0.6)' }} />
-                            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'rgba(120, 190, 170, 0.6)', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                            <BookOpen size={13} style={{ color: 'rgba(95, 145, 85, 0.7)' }} />
+                            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.7rem', color: 'rgba(95, 145, 85, 0.7)', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                 Journal Entry
                             </span>
                         </div>
-                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(160, 200, 182, 0.6)', fontWeight: '300', lineHeight: '1.65', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(190, 210, 180, 0.6)', fontWeight: '300', lineHeight: '1.65', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                             {journalEntry}
                         </p>
                     </div>
                 )}
 
-                {/* Expand/collapse tasks */}
+                {/* Expand/collapse */}
                 {hasTasks && (
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="flex cursor-pointer items-center justify-center gap-2 w-full py-2.5 rounded-xl transition-all duration-200"
                         style={{
-                            background: 'rgba(255,255,255,0.02)',
-                            border: '1px solid rgba(104, 178, 160, 0.08)',
-                            color: 'rgba(140, 185, 168, 0.5)',
+                            background: 'rgba(255, 255, 255, 0.02)',
+                            border: '1px solid rgba(95, 120, 80, 0.1)',
+                            color: 'rgba(150, 170, 135, 0.5)',
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.8125rem',
                             fontWeight: '300',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.2)'}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.08)'}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.25)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.1)'}
                     >
-                        {isExpanded ? <><span>Hide tasks</span><ChevronUp size={14} /></> : <><span>View {taskStats.total} tasks</span><ChevronDown size={14} /></>}
+                        {isExpanded
+                            ? <><span>Hide tasks</span><ChevronUp size={14} /></>
+                            : <><span>View {taskStats.total} tasks</span><ChevronDown size={14} /></>
+                        }
                     </button>
                 )}
             </div>
@@ -207,7 +204,7 @@ function SessionCard({ session, index, sessionRef }) {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
                         className="px-5 pb-5"
-                        style={{ borderTop: '1px solid rgba(104, 178, 160, 0.08)' }}
+                        style={{ borderTop: '1px solid rgba(95, 120, 80, 0.1)' }}
                     >
                         <div className="space-y-2.5 pt-4">
                             {tasks.map((task) => {
@@ -222,35 +219,33 @@ function SessionCard({ session, index, sessionRef }) {
                                         className="p-4 rounded-xl"
                                         style={{
                                             background: 'rgba(255, 255, 255, 0.02)',
-                                            border: '1px solid rgba(104, 178, 160, 0.07)',
+                                            border: '1px solid rgba(95, 120, 80, 0.08)',
                                         }}
                                     >
-                                        {/* Task header */}
                                         <div className="flex items-start gap-3 mb-2">
                                             {status === 'done'
-                                                ? <CheckCircle2 size={16} style={{ color: 'rgba(100, 200, 160, 0.8)', marginTop: '2px', flexShrink: 0 }} />
-                                                : <Circle size={16} style={{ color: 'rgba(140, 170, 160, 0.4)', marginTop: '2px', flexShrink: 0 }} />
+                                                ? <CheckCircle2 size={16} style={{ color: 'rgba(110, 145, 90, 0.9)', marginTop: '2px', flexShrink: 0 }} />
+                                                : <Circle size={16} style={{ color: 'rgba(150, 170, 135, 0.4)', marginTop: '2px', flexShrink: 0 }} />
                                             }
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center justify-between gap-2 mb-1.5">
                                                     <h4
                                                         className={status === 'done' ? 'line-through' : ''}
-                                                        style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: status === 'done' ? 'rgba(140, 170, 160, 0.5)' : 'rgba(210, 235, 222, 0.85)', fontWeight: '400' }}
+                                                        style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: status === 'done' ? 'rgba(150, 170, 135, 0.5)' : '#dce8d8', fontWeight: '400' }}
                                                     >
                                                         {task.title}
                                                     </h4>
                                                     <span
                                                         className="px-2 py-0.5 rounded text-xs whitespace-nowrap"
-                                                        style={{ background: `${statusInfo.color}18`, color: statusInfo.color, fontFamily: 'var(--font-sans)', fontWeight: '400', fontSize: '0.7rem' }}
+                                                        style={{ background: `${statusInfo.color}18`, color: statusInfo.color, fontFamily: 'var(--font-sans)', fontWeight: '500', fontSize: '0.7rem' }}
                                                     >
                                                         {statusInfo.label}
                                                     </span>
                                                 </div>
 
-                                                {/* Progress bar */}
                                                 {task.subtasks && task.subtasks.length > 0 && (
                                                     <div className="mb-2">
-                                                        <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: 'rgba(100, 130, 120, 0.2)' }}>
+                                                        <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(95, 120, 80, 0.15)' }}>
                                                             <div
                                                                 className="h-full rounded-full transition-all duration-500"
                                                                 style={{ width: `${progress}%`, background: statusInfo.color }}
@@ -259,36 +254,34 @@ function SessionCard({ session, index, sessionRef }) {
                                                     </div>
                                                 )}
 
-                                                {/* Tags */}
                                                 <div className="flex flex-wrap gap-1.5">
                                                     <span
                                                         className="px-2 py-0.5 rounded-full text-xs"
-                                                        style={{ background: `${priorityColors[priorityKey]}15`, color: priorityColors[priorityKey], fontFamily: 'var(--font-sans)', fontWeight: '400' }}
+                                                        style={{ background: 'rgba(95, 120, 80, 0.15)', color: priorityColors[priorityKey], fontFamily: 'var(--font-sans)', fontWeight: '500' }}
                                                     >
                                                         {priorityLabels[priorityKey]}
                                                     </span>
                                                     {task.category && (
                                                         <span
                                                             className="px-2 py-0.5 rounded-full text-xs"
-                                                            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(104, 178, 160, 0.1)', color: 'rgba(140, 185, 168, 0.55)', fontFamily: 'var(--font-sans)', fontWeight: '300' }}
+                                                            style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(95, 120, 80, 0.12)', color: 'rgba(190, 210, 180, 0.8)', fontFamily: 'var(--font-sans)', fontWeight: '300' }}
                                                         >
                                                             {task.category}
                                                         </span>
                                                     )}
                                                 </div>
 
-                                                {/* Subtasks */}
                                                 {task.subtasks && task.subtasks.length > 0 && (
-                                                    <div className="mt-2.5 space-y-1.5 pl-1 border-t pt-2" style={{ borderColor: 'rgba(104, 178, 160, 0.07)' }}>
+                                                    <div className="mt-2.5 space-y-1.5 pl-1 border-t pt-2" style={{ borderColor: 'rgba(95, 120, 80, 0.1)' }}>
                                                         {task.subtasks.map(subtask => (
                                                             <div key={subtask.id} className="flex items-center gap-2">
                                                                 {subtask.completed
-                                                                    ? <CheckCircle2 size={13} style={{ color: 'rgba(100, 200, 160, 0.7)', flexShrink: 0 }} />
-                                                                    : <Circle size={13} style={{ color: 'rgba(140, 170, 160, 0.35)', flexShrink: 0 }} />
+                                                                    ? <CheckCircle2 size={13} style={{ color: 'rgba(110, 145, 90, 0.8)', flexShrink: 0 }} />
+                                                                    : <Circle size={13} style={{ color: 'rgba(150, 170, 135, 0.35)', flexShrink: 0 }} />
                                                                 }
                                                                 <span
                                                                     className={subtask.completed ? 'line-through' : ''}
-                                                                    style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: subtask.completed ? 'rgba(130, 160, 150, 0.4)' : 'rgba(160, 195, 178, 0.55)', fontWeight: '300' }}
+                                                                    style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: subtask.completed ? 'rgba(150, 170, 135, 0.4)' : 'rgba(190, 210, 180, 0.7)', fontWeight: '300' }}
                                                                 >
                                                                     {subtask.title}
                                                                 </span>
@@ -336,19 +329,19 @@ export default function History() {
     );
 
     return (
-        <div className="min-h-screen pb-12" style={{ background: '#0d1f1e' }}>
+        <div className="min-h-screen pb-12" style={{ background: '#141e16' }}>
 
             {/* Background orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
                 <motion.div
                     className="absolute rounded-full"
-                    style={{ width: '500px', height: '500px', top: '-150px', left: '-150px', background: 'radial-gradient(circle, rgba(56, 178, 172, 0.08) 0%, transparent 70%)', filter: 'blur(50px)' }}
+                    style={{ width: '500px', height: '500px', top: '-150px', left: '-150px', background: 'radial-gradient(circle, rgba(75, 120, 65, 0.1) 0%, transparent 70%)', filter: 'blur(50px)' }}
                     animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
                     transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 <motion.div
                     className="absolute rounded-full"
-                    style={{ width: '600px', height: '600px', bottom: '-200px', right: '-200px', background: 'radial-gradient(circle, rgba(104, 157, 140, 0.06) 0%, transparent 70%)', filter: 'blur(60px)' }}
+                    style={{ width: '600px', height: '600px', bottom: '-200px', right: '-200px', background: 'radial-gradient(circle, rgba(110, 90, 60, 0.07) 0%, transparent 70%)', filter: 'blur(60px)' }}
                     animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
                     transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
                 />
@@ -357,7 +350,7 @@ export default function History() {
             {/* Header */}
             <div
                 className="sticky top-0 z-1000 px-6 py-4 mb-6"
-                style={{ background: 'rgba(13, 31, 30, 0.92)', borderBottom: '1px solid rgba(104, 178, 160, 0.08)', backdropFilter: 'blur(16px)' }}
+                style={{ background: 'rgba(20, 30, 22, 0.92)', borderBottom: '1px solid rgba(95, 120, 80, 0.12)', backdropFilter: 'blur(16px)' }}
             >
                 <div className="flex items-center justify-between mb-4">
                     <button
@@ -365,8 +358,8 @@ export default function History() {
                         className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
                         style={{
                             background: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(104, 178, 160, 0.1)',
-                            color: 'rgba(140, 180, 165, 0.7)',
+                            border: '1px solid rgba(95, 120, 80, 0.12)',
+                            color: 'rgba(190, 210, 180, 0.8)',
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
                         }}
@@ -374,20 +367,20 @@ export default function History() {
                         <ArrowLeft size={15} />
                         Back
                     </button>
-                    <div className="flex items-center gap-3" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(140, 180, 165, 0.7)' }}>
+                    <div className="flex items-center gap-3" style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(190, 210, 180, 0.8)' }}>
                         <button
                             type="button"
-                            onClick={() => navigate('/app')}
+                            onClick={() => navigate('/landing')}
                             className="px-3 py-2 rounded-lg transition-all cursor-pointer duration-200"
                             style={{
-                                background: 'rgba(80, 160, 145, 0.12)',
-                                border: '1px solid rgba(104, 178, 160, 0.15)',
-                                color: 'rgba(120, 190, 170, 0.8)',
+                                background: 'rgba(75, 120, 65, 0.15)',
+                                border: '1px solid rgba(95, 120, 80, 0.2)',
+                                color: 'rgba(130, 175, 120, 0.8)',
                                 fontFamily: 'var(--font-sans)',
                                 fontSize: '0.8125rem',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(80, 160, 145, 0.22)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(80, 160, 145, 0.12)'}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.28)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(75, 120, 65, 0.15)'}
                         >
                             + New Session
                         </button>
@@ -401,10 +394,10 @@ export default function History() {
                     </div>
                 </div>
 
-                <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.75rem, 6vw, 2.25rem)', color: 'rgba(220, 235, 225, 0.9)', fontWeight: '400', textAlign: 'center' }}>
+                <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.75rem, 6vw, 2.25rem)', color: '#dce8d8', fontWeight: '400', textAlign: 'center' }}>
                     Your History
                 </h1>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(140, 185, 168, 0.45)', fontWeight: '300', textAlign: 'center', marginTop: '0.4rem' }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '300', textAlign: 'center', marginTop: '0.4rem' }}>
                     Reflecting on your journey towards clarity
                 </p>
             </div>
@@ -412,7 +405,6 @@ export default function History() {
             {/* Content */}
             <div className="relative z-10 px-6 space-y-3">
 
-                {/* Loading */}
                 {isLoading && (
                     <div className="space-y-3">
                         {[...Array(4)].map((_, i) => (
@@ -421,47 +413,44 @@ export default function History() {
                                 animate={{ opacity: [0.3, 0.6, 0.3] }}
                                 transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.15 }}
                                 className="rounded-2xl"
-                                style={{ height: '100px', background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(104, 178, 160, 0.07)' }}
+                                style={{ height: '100px', background: 'rgba(22, 32, 24, 0.6)', border: '1px solid rgba(95, 120, 80, 0.08)' }}
                             />
                         ))}
                     </div>
                 )}
 
-                {/* Error */}
                 {error && (
                     <div className="text-center py-12">
-                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: 'rgba(220, 130, 110, 0.7)', fontWeight: '300' }}>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: 'rgba(180, 100, 70, 0.8)', fontWeight: '300' }}>
                             Failed to load sessions.
                         </p>
                         <button
                             onClick={() => window.location.reload()}
-                            style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'rgba(120, 190, 170, 0.6)', fontWeight: '300', marginTop: '0.75rem' }}
+                            style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'rgba(130, 175, 120, 0.7)', fontWeight: '300', marginTop: '0.75rem' }}
                         >
                             Try again
                         </button>
                     </div>
                 )}
 
-                {/* Empty */}
                 {!isLoading && !error && sortedSessions.length === 0 && (
                     <div className="text-center py-16">
-                        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.125rem', color: 'rgba(160, 200, 182, 0.4)', fontWeight: '400', fontStyle: 'italic' }}>
+                        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.125rem', color: 'rgba(150, 170, 135, 0.4)', fontWeight: '400', fontStyle: 'italic' }}>
                             No sessions yet.
                         </p>
-                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(140, 180, 165, 0.3)', fontWeight: '300', marginTop: '0.5rem' }}>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(150, 170, 135, 0.3)', fontWeight: '300', marginTop: '0.5rem' }}>
                             Start your first session to begin your journey.
                         </p>
                         <button
-                            onClick={() => navigate('/app')}
+                            onClick={() => navigate('/landing')}
                             className="mt-6 px-6 py-3 rounded-2xl transition-all duration-200"
-                            style={{ background: 'rgba(80, 160, 145, 0.15)', border: '1px solid rgba(104, 178, 160, 0.2)', color: 'rgba(140, 200, 178, 0.8)', fontFamily: 'var(--font-sans)', fontSize: '0.875rem', fontWeight: '400' }}
+                            style={{ background: 'rgba(75, 115, 65, 0.15)', border: '1px solid rgba(95, 120, 80, 0.2)', color: 'rgba(130, 175, 120, 0.8)', fontFamily: 'var(--font-sans)', fontSize: '0.875rem', fontWeight: '400' }}
                         >
                             Start a session
                         </button>
                     </div>
                 )}
 
-                {/* Sessions */}
                 {!isLoading && !error && sortedSessions.map((session, index) => (
                     <SessionCard
                         key={session.id}
