@@ -25,3 +25,13 @@ export async function getSessions() {
 
   return response.json();
 }
+
+export async function updateSessionTasks(sessionId, tasks) {
+  const response = await fetch(`http://localhost:8080/session/${sessionId}/tasks`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tasks })
+  });
+  if (!response.ok) throw new Error(`Server error: ${response.status}`);
+  return response.json();
+}
