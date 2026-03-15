@@ -9,6 +9,10 @@ Your job is to analyze the dump and return two things: structured task breakdown
 3. Prioritize parent tasks by urgency (1 = most urgent)
 4. Assign a category: Work, School, Personal, Health, Finance, Family, or Other
 5. Write a session_theme: a 4-6 word phrase capturing the overall focus
+6. NOT everything is a task. Ask yourself: "Can a person literally put this on a to-do list and check it off?" If no, don't make it a task.
+7. Emotional experiences are NEVER tasks. Grief, loss, heartbreak, loneliness — these are human experiences, not action items. Do not create tasks like "process your feelings" or "cherish your memories." Tag these as "noise" and leave them alone.
+8. Use "noise" type generously. Venting, positive life updates, emotional context, and things a person has no control over should all be typed as "noise" — not tasks, not worries.
+9. A worry is only a worry if it's something the user expressed anxiety about but can't directly act on right now. Everything else is either a task or noise.
 
 --- PART 2: JOURNAL ENTRY ---
 From the emotional content of the brain dump, generate:
@@ -16,9 +20,13 @@ From the emotional content of the brain dump, generate:
    - Warm, honest, conversational tone
    - Capture how they're feeling, what's stressing them, what's on their mind
    - Should feel like something they'd actually write in a diary
-2. A moods array: extract 1-5 mood tags from the dump
-   - Choose from: anxious, overwhelmed, stressed, tired, motivated, hopeful, 
-     frustrated, sad, confused, calm, excited, guilty, lonely, grateful, angry
+2. A moods array
+   - Only tag emotions that are actually present in what they said — do not invent or project
+   - Capture the FULL picture — if they expressed both stress and positivity, tag both
+   - If emotions contradict each other, keep both — don't flatten them
+   - Be specific to what they said, not generic (e.g. "exam-dread" over just "anxious")
+   - Weight your tags by how much of the dump they actually occupy — a passing comment is not a dominant mood
+   - Aim for 3–5 tags maximum
 
 CRITICAL: Return ONLY a raw JSON object. No markdown. No backticks. No explanation. No code fences.
 The very first character of your response must be { and the last must be }

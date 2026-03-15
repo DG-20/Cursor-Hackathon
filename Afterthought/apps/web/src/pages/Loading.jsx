@@ -293,7 +293,7 @@ export default function Loading() {
                 textAlign: 'center',
               }}
             >
-              Clarity incoming.
+              AfterThought begins.
             </motion.h2>
 
             <motion.p
@@ -324,7 +324,7 @@ export default function Loading() {
                 letterSpacing: '0.03em',
               }}
             >
-              your clarity is ready
+              your afterthought awaits
             </motion.p>
           </motion.div>
         )}
