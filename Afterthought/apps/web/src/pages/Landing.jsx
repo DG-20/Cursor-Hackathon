@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { Mic, MicOff, Type } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
-import processTranscript from '../api/session.js';
+import {processTranscript} from '../api/session.js';
 
 export default function Landing() {
   const [inputMode, setInputMode] = useState('voice');
@@ -84,12 +84,12 @@ export default function Landing() {
     if (!input.trim()) return;
 
     startSession(input);
-    navigate('/loading', { state: { transcript: input } });
+    navigate('/loading', { state: { user_id: user.id, transcript: input } });
 
     try {
       const [data] = await Promise.all([
-        processTranscript(input),
-        new Promise(resolve => setTimeout(resolve, 500))
+        processTranscript(user.id, input),
+        new Promise(resolve => setTimeout(resolve, 500)) // just enough to not block
       ]);
 
       completeSession(data);

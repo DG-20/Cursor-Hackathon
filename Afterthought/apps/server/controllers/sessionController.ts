@@ -15,7 +15,7 @@ function mapTasksToFrontend(tasks: any[]): any[] {
 
 export async function processSpeech(req: Request, res: Response) {
   try {
-    const { transcript } = req.body ?? {};
+    const { user_id, transcript } = req.body ?? {};
     if (typeof transcript !== 'string' || !transcript.trim()) {
       res.status(400).json({ error: 'Missing or invalid transcript in body' });
       return;
@@ -41,7 +41,7 @@ export async function processSpeech(req: Request, res: Response) {
         transcript: transcript.trim(),
         tasks,
         journal,
-        user_id: null,
+        user_id: user_id,
       })
       .select('id')
       .single();
@@ -63,11 +63,17 @@ export async function processSpeech(req: Request, res: Response) {
 
 export async function getSessions(req: Request, res: Response) {
   try {
-    const { data, error } = await supabase
+    const { userId } = req.body ?? {};
+
+    const query = supabase
       .from('sessions')
       .select('id, created_at, tasks, journal')
-      .is('user_id', null)
       .order('created_at', { ascending: false });
+
+    // Filter by user_id if provided, otherwise fall back to null (unauthenticated)
+    const { data, error } = userId
+      ? await query.eq('user_id', userId)
+      : await query.is('user_id', null);
 
     if (error) {
       console.error('Supabase fetch error:', error.message);
