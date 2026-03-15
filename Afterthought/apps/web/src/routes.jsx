@@ -6,6 +6,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
+import MindMap from './pages/MindMap';
 import Journal from './pages/Journal';
 import Landing from './pages/Hero';
 
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/loading', Component: Loading },
       { path: '/results/list', Component: ResultsList },
+      { path: '/results/mindmap', Component: MindMap },
     ],
   },
   {

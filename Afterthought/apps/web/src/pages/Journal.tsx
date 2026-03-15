@@ -13,7 +13,6 @@ export default function Journal() {
     const [isLoading, setIsLoading] = useState(true);
     const { user } = useAuth();
 
-    // Fetch last 7 sessions from backend
     useEffect(() => {
         async function fetchSessions() {
           try {
@@ -44,27 +43,66 @@ export default function Journal() {
     };
 
     const getMoodColor = (moods) => {
-        if (!moods || moods.length === 0) return 'rgba(120, 190, 170, 0.6)';
+        if (!moods || moods.length === 0) return 'rgba(95, 145, 85, 0.6)';
         const positiveWords = ['hopeful', 'grateful', 'calm', 'motivated', 'excited', 'accomplished', 'joyful'];
         const negativeWords = ['anxious', 'overwhelmed', 'stressed', 'tired', 'frustrated', 'sad', 'angry'];
         const hasPositive = moods.some(m => positiveWords.includes(m));
         const hasNegative = moods.some(m => negativeWords.includes(m));
-        if (hasPositive && !hasNegative) return 'rgba(100, 200, 160, 0.8)';
-        if (hasNegative && !hasPositive) return 'rgba(200, 130, 110, 0.7)';
-        return 'rgba(160, 190, 200, 0.7)';
+        if (hasPositive && !hasNegative) return 'rgba(95, 145, 85, 0.8)';
+        if (hasNegative && !hasPositive) return 'rgba(180, 100, 70, 0.7)';
+        return 'rgba(155, 140, 100, 0.7)';
     };
 
     return (
-        <div className="min-h-screen px-6 py-8 pb-32">
+        <div
+            className="min-h-screen px-6 py-8 pb-32 relative overflow-hidden"
+            style={{ background: '#141e16' }}
+        >
+            {/* Background orbs */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <motion.div
+                    className="absolute rounded-full"
+                    style={{
+                        width: '500px', height: '500px',
+                        top: '-150px', left: '-150px',
+                        background: 'radial-gradient(circle, rgba(75, 120, 65, 0.1) 0%, transparent 70%)',
+                        filter: 'blur(50px)',
+                    }}
+                    animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                    className="absolute rounded-full"
+                    style={{
+                        width: '500px', height: '500px',
+                        bottom: '-150px', right: '-150px',
+                        background: 'radial-gradient(circle, rgba(110, 90, 60, 0.07) 0%, transparent 70%)',
+                        filter: 'blur(50px)',
+                    }}
+                    animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
+                    transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                    className="absolute rounded-full"
+                    style={{
+                        width: '300px', height: '300px',
+                        top: '40%', right: '-60px',
+                        background: 'radial-gradient(circle, rgba(130, 100, 65, 0.06) 0%, transparent 70%)',
+                        filter: 'blur(50px)',
+                    }}
+                    animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.8, 0.4] }}
+                    transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+                />
+            </div>
 
             {/* Header */}
-            <div className="mb-8">
+            <div className="mb-8 relative z-10">
                 <div className="flex items-center justify-between mb-6">
                     <button
                         onClick={() => navigate('/results/list')}
                         className="flex items-center gap-2 transition-all duration-300"
                         style={{
-                            color: 'var(--clarity-text-secondary)',
+                            color: 'rgba(190, 210, 180, 0.8)',
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
                         }}
@@ -78,7 +116,7 @@ export default function Journal() {
                     style={{
                         fontFamily: 'var(--font-serif)',
                         fontSize: '2rem',
-                        color: 'var(--clarity-text-primary)',
+                        color: '#dce8d8',
                         fontWeight: '400',
                     }}
                 >
@@ -92,20 +130,20 @@ export default function Journal() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="mb-6 rounded-2xl p-6"
+                    className="mb-6 rounded-2xl p-6 relative z-10"
                     style={{
-                        background: 'rgba(80, 160, 145, 0.06)',
-                        border: '1px solid rgba(104, 178, 160, 0.15)',
+                        background: 'rgba(75, 115, 65, 0.06)',
+                        border: '1px solid rgba(95, 120, 80, 0.15)',
                         backdropFilter: 'blur(10px)',
                     }}
                 >
                     <div className="flex items-center gap-2 mb-4">
-                        <Sparkles size={16} style={{ color: 'rgba(120, 190, 170, 0.8)' }} />
+                        <Sparkles size={16} style={{ color: 'rgba(95, 145, 85, 0.8)' }} />
                         <span
                             style={{
                                 fontFamily: 'var(--font-sans)',
                                 fontSize: '0.75rem',
-                                color: 'rgba(120, 190, 170, 0.7)',
+                                color: 'rgba(95, 145, 85, 0.7)',
                                 fontWeight: '500',
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.06em',
@@ -119,7 +157,7 @@ export default function Journal() {
                         style={{
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.9375rem',
-                            color: 'var(--clarity-text-primary)',
+                            color: '#dce8d8',
                             fontWeight: '300',
                             lineHeight: '1.85',
                             marginBottom: '1rem',
@@ -128,7 +166,6 @@ export default function Journal() {
                         {journalEntry}
                     </p>
 
-                    {/* Mood tags */}
                     {moodTags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-3">
                             {moodTags.map((tag) => (
@@ -136,9 +173,9 @@ export default function Journal() {
                                     key={tag}
                                     className="px-3 py-1 rounded-full text-xs capitalize"
                                     style={{
-                                        background: 'rgba(80, 160, 145, 0.12)',
-                                        border: '1px solid rgba(104, 178, 160, 0.15)',
-                                        color: 'rgba(140, 200, 178, 0.85)',
+                                        background: 'rgba(75, 115, 65, 0.12)',
+                                        border: '1px solid rgba(95, 120, 80, 0.15)',
+                                        color: 'rgba(130, 175, 120, 0.85)',
                                         fontFamily: 'var(--font-sans)',
                                         fontWeight: '300',
                                     }}
@@ -156,13 +193,14 @@ export default function Journal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative z-10"
             >
                 <h2
                     className="mb-4"
                     style={{
                         fontFamily: 'var(--font-sans)',
                         fontSize: '0.75rem',
-                        color: 'rgba(140, 180, 165, 0.5)',
+                        color: 'rgba(150, 170, 135, 0.5)',
                         fontWeight: '500',
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
@@ -178,8 +216,8 @@ export default function Journal() {
                                 key={i}
                                 className="rounded-2xl p-4 animate-pulse"
                                 style={{
-                                    background: 'rgba(255,255,255,0.03)',
-                                    border: '1px solid rgba(104, 178, 160, 0.08)',
+                                    background: 'rgba(22, 32, 24, 0.6)',
+                                    border: '1px solid rgba(95, 120, 80, 0.08)',
                                     height: '72px',
                                 }}
                             />
@@ -190,7 +228,7 @@ export default function Journal() {
                         style={{
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
-                            color: 'rgba(140, 180, 165, 0.4)',
+                            color: 'rgba(150, 170, 135, 0.4)',
                             fontWeight: '300',
                             textAlign: 'center',
                             padding: '2rem 0',
@@ -215,13 +253,12 @@ export default function Journal() {
                                     transition={{ duration: 0.4, delay: 0.25 + i * 0.07 }}
                                     className="flex items-center gap-4 px-4 py-4 rounded-2xl cursor-pointer group transition-all duration-200"
                                     style={{
-                                        background: 'rgba(255, 255, 255, 0.025)',
-                                        border: '1px solid rgba(104, 178, 160, 0.08)',
+                                        background: 'rgba(22, 32, 24, 0.7)',
+                                        border: '1px solid rgba(95, 120, 80, 0.08)',
                                     }}
-                                    onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.18)'}
-                                    onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.08)'}
+                                    onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.2)'}
+                                    onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.08)'}
                                 >
-                                    {/* Mood dot */}
                                     <div
                                         style={{
                                             width: '10px',
@@ -233,14 +270,13 @@ export default function Journal() {
                                         }}
                                     />
 
-                                    {/* Content */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span
                                                 style={{
                                                     fontFamily: 'var(--font-sans)',
                                                     fontSize: '0.875rem',
-                                                    color: 'rgba(210, 235, 222, 0.8)',
+                                                    color: 'rgba(210, 230, 200, 0.8)',
                                                     fontWeight: '400',
                                                 }}
                                             >
@@ -250,7 +286,7 @@ export default function Journal() {
                                                 style={{
                                                     fontFamily: 'var(--font-sans)',
                                                     fontSize: '0.75rem',
-                                                    color: 'rgba(120, 170, 150, 0.4)',
+                                                    color: 'rgba(150, 170, 135, 0.4)',
                                                     fontWeight: '300',
                                                 }}
                                             >
@@ -258,13 +294,12 @@ export default function Journal() {
                                             </span>
                                         </div>
 
-                                        {/* Journal preview */}
                                         {entry && (
                                             <p
                                                 style={{
                                                     fontFamily: 'var(--font-sans)',
                                                     fontSize: '0.8125rem',
-                                                    color: 'rgba(150, 190, 173, 0.45)',
+                                                    color: 'rgba(150, 170, 135, 0.45)',
                                                     fontWeight: '300',
                                                     lineHeight: '1.5',
                                                     overflow: 'hidden',
@@ -276,7 +311,6 @@ export default function Journal() {
                                             </p>
                                         )}
 
-                                        {/* Mood tags — max 3 */}
                                         {moods.length > 0 && (
                                             <div className="flex gap-1.5 mt-1.5">
                                                 {moods.slice(0, 3).map(tag => (
@@ -284,8 +318,8 @@ export default function Journal() {
                                                         key={tag}
                                                         className="px-2 py-0.5 rounded-full text-xs capitalize"
                                                         style={{
-                                                            background: 'rgba(80, 160, 145, 0.1)',
-                                                            color: 'rgba(120, 185, 165, 0.6)',
+                                                            background: 'rgba(75, 115, 65, 0.1)',
+                                                            color: 'rgba(130, 175, 120, 0.6)',
                                                             fontFamily: 'var(--font-sans)',
                                                             fontWeight: '300',
                                                         }}
@@ -297,10 +331,9 @@ export default function Journal() {
                                         )}
                                     </div>
 
-                                    {/* Arrow */}
                                     <ChevronRight
                                         size={15}
-                                        style={{ color: 'rgba(120, 170, 150, 0.25)', flexShrink: 0 }}
+                                        style={{ color: 'rgba(150, 170, 135, 0.25)', flexShrink: 0 }}
                                     />
                                 </motion.div>
                             );
@@ -308,7 +341,6 @@ export default function Journal() {
                     </div>
                 )}
 
-                {/* Full history button */}
                 {!isLoading && pastSessions.length > 0 && (
                     <motion.button
                         initial={{ opacity: 0 }}
@@ -318,19 +350,19 @@ export default function Journal() {
                         className="w-full mt-4 py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200"
                         style={{
                             background: 'transparent',
-                            border: '1px solid rgba(104, 178, 160, 0.12)',
-                            color: 'rgba(140, 190, 170, 0.6)',
+                            border: '1px solid rgba(95, 120, 80, 0.12)',
+                            color: 'rgba(150, 170, 135, 0.6)',
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
                             fontWeight: '300',
                         }}
                         onMouseEnter={e => {
-                            e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.25)';
-                            e.currentTarget.style.color = 'rgba(160, 210, 190, 0.8)';
+                            e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.25)';
+                            e.currentTarget.style.color = 'rgba(190, 210, 180, 0.8)';
                         }}
                         onMouseLeave={e => {
-                            e.currentTarget.style.borderColor = 'rgba(104, 178, 160, 0.12)';
-                            e.currentTarget.style.color = 'rgba(140, 190, 170, 0.6)';
+                            e.currentTarget.style.borderColor = 'rgba(95, 120, 80, 0.12)';
+                            e.currentTarget.style.color = 'rgba(150, 170, 135, 0.6)';
                         }}
                     >
                         <Calendar size={15} />
@@ -342,15 +374,15 @@ export default function Journal() {
             {/* Bottom CTA */}
             <div
                 className="fixed bottom-0 left-0 right-0 px-6 py-4"
-                style={{ background: 'var(--clarity-bg-deep)', borderTop: '1px solid rgba(104, 178, 160, 0.08)' }}
+                style={{ background: 'rgba(20, 30, 22, 0.95)', borderTop: '1px solid rgba(95, 120, 80, 0.08)' }}
             >
                 <button
                     onClick={() => navigate('/')}
                     className="w-full py-4 rounded-2xl transition-all duration-300"
                     style={{
-                        background: 'linear-gradient(135deg, rgba(80, 160, 145, 0.8) 0%, rgba(52, 120, 110, 0.9) 100%)',
-                        border: '1px solid rgba(104, 178, 160, 0.2)',
-                        color: 'rgba(225, 245, 238, 0.95)',
+                        background: 'linear-gradient(135deg, rgba(75, 115, 65, 0.85) 0%, rgba(55, 90, 50, 0.9) 100%)',
+                        border: '1px solid rgba(95, 120, 80, 0.2)',
+                        color: 'rgba(220, 235, 210, 0.95)',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: '500',
                         fontSize: '0.9375rem',

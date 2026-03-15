@@ -56,7 +56,7 @@ export default function SignUp() {
     return (
         <div
             className="min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden"
-            style={{ background: '#0d1f1e' }}
+            style={{ background: '#141e16' }}
         >
 
             {/* Background orbs */}
@@ -66,7 +66,7 @@ export default function SignUp() {
                     style={{
                         width: '500px', height: '500px',
                         top: '-150px', left: '-150px',
-                        background: 'radial-gradient(circle, rgba(56, 178, 172, 0.1) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(75, 120, 65, 0.1) 0%, transparent 70%)',
                         filter: 'blur(50px)',
                     }}
                     animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
@@ -77,11 +77,22 @@ export default function SignUp() {
                     style={{
                         width: '500px', height: '500px',
                         bottom: '-150px', right: '-150px',
-                        background: 'radial-gradient(circle, rgba(104, 157, 140, 0.08) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(110, 90, 60, 0.07) 0%, transparent 70%)',
                         filter: 'blur(50px)',
                     }}
                     animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
                     transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                    className="absolute rounded-full"
+                    style={{
+                        width: '300px', height: '300px',
+                        top: '50%', left: '60%',
+                        background: 'radial-gradient(circle, rgba(130, 100, 65, 0.05) 0%, transparent 70%)',
+                        filter: 'blur(50px)',
+                    }}
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
+                    transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
                 />
             </div>
 
@@ -100,7 +111,7 @@ export default function SignUp() {
                         style={{
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.875rem',
-                            color: 'rgba(140, 180, 165, 0.5)',
+                            color: 'rgba(150, 170, 135, 0.5)',
                             fontWeight: '300',
                             textDecoration: 'none',
                         }}
@@ -121,7 +132,7 @@ export default function SignUp() {
                         style={{
                             fontFamily: 'var(--font-serif)',
                             fontSize: 'clamp(2.25rem, 8vw, 3rem)',
-                            color: '#e8ede8',
+                            color: '#dce8d8',
                             fontWeight: '400',
                             lineHeight: '1.1',
                             letterSpacing: '-0.02em',
@@ -133,7 +144,7 @@ export default function SignUp() {
                     <p style={{
                         fontFamily: 'var(--font-sans)',
                         fontSize: '0.9rem',
-                        color: 'rgba(160, 200, 185, 0.5)',
+                        color: 'rgba(150, 170, 135, 0.5)',
                         fontWeight: '300',
                         lineHeight: '1.6',
                     }}>
@@ -151,7 +162,7 @@ export default function SignUp() {
                 >
                     {/* Email */}
                     <div>
-                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
                             Email
                         </label>
                         <input
@@ -163,19 +174,19 @@ export default function SignUp() {
                             className="w-full px-4 py-3.5 rounded-xl focus:outline-none transition-all duration-300"
                             style={{
                                 background: 'rgba(255, 255, 255, 0.03)',
-                                border: '1px solid rgba(104, 178, 160, 0.12)',
-                                color: '#deeee6',
+                                border: '1px solid rgba(95, 120, 80, 0.12)',
+                                color: '#dce8d8',
                                 fontFamily: 'var(--font-sans)',
                                 fontSize: '0.9375rem',
                                 fontWeight: '300',
                             }}
-                            onFocus={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.35)'}
-                            onBlur={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.12)'}
+                            onFocus={e => e.target.style.borderColor = 'rgba(95, 120, 80, 0.35)'}
+                            onBlur={e => e.target.style.borderColor = 'rgba(95, 120, 80, 0.12)'}
                         />
                     </div>
 
                     <div>
-                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
                             Name
                         </label>
                         <input
@@ -187,20 +198,20 @@ export default function SignUp() {
                             className="w-full px-4 py-3.5 rounded-xl focus:outline-none transition-all duration-300"
                             style={{
                                 background: 'rgba(255, 255, 255, 0.03)',
-                                border: '1px solid rgba(104, 178, 160, 0.12)',
-                                color: '#deeee6',
+                                border: '1px solid rgba(95, 120, 80, 0.12)',
+                                color: '#dce8d8',
                                 fontFamily: 'var(--font-sans)',
                                 fontSize: '0.9375rem',
                                 fontWeight: '300',
                             }}
-                            onFocus={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.35)'}
-                            onBlur={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.12)'}
+                            onFocus={e => e.target.style.borderColor = 'rgba(95, 120, 80, 0.35)'}
+                            onBlur={e => e.target.style.borderColor = 'rgba(95, 120, 80, 0.12)'}
                         />
                     </div>
 
                     {/* Password */}
                     <div>
-                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
                             Password
                         </label>
                         <div className="relative">
@@ -213,35 +224,35 @@ export default function SignUp() {
                                 className="w-full px-4 py-3.5 rounded-xl focus:outline-none transition-all duration-300"
                                 style={{
                                     background: 'rgba(255, 255, 255, 0.03)',
-                                    border: `1px solid ${passwordTooShort ? 'rgba(240, 150, 130, 0.4)' : 'rgba(104, 178, 160, 0.12)'}`,
-                                    color: '#deeee6',
+                                    border: `1px solid ${passwordTooShort ? 'rgba(180, 100, 70, 0.4)' : 'rgba(95, 120, 80, 0.12)'}`,
+                                    color: '#dce8d8',
                                     fontFamily: 'var(--font-sans)',
                                     fontSize: '0.9375rem',
                                     fontWeight: '300',
                                     paddingRight: '3rem',
                                 }}
-                                onFocus={e => e.target.style.borderColor = passwordTooShort ? 'rgba(240, 150, 130, 0.5)' : 'rgba(104, 178, 160, 0.35)'}
-                                onBlur={e => e.target.style.borderColor = passwordTooShort ? 'rgba(240, 150, 130, 0.4)' : 'rgba(104, 178, 160, 0.12)'}
+                                onFocus={e => e.target.style.borderColor = passwordTooShort ? 'rgba(180, 100, 70, 0.5)' : 'rgba(95, 120, 80, 0.35)'}
+                                onBlur={e => e.target.style.borderColor = passwordTooShort ? 'rgba(180, 100, 70, 0.4)' : 'rgba(95, 120, 80, 0.12)'}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-4 top-1/2 -translate-y-1/2"
-                                style={{ color: 'rgba(140, 180, 165, 0.35)' }}
+                                style={{ color: 'rgba(150, 170, 135, 0.35)' }}
                             >
                                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                         </div>
                         {passwordTooShort && (
-                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(240, 150, 130, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
-                                At least 8 characters required
+                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(180, 100, 70, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
+                                At least 6 characters required
                             </p>
                         )}
                     </div>
 
                     {/* Confirm Password */}
                     <div>
-                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+                        <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
                             Confirm Password
                         </label>
                         <input
@@ -253,30 +264,30 @@ export default function SignUp() {
                             className="w-full px-4 py-3.5 rounded-xl focus:outline-none transition-all duration-300"
                             style={{
                                 background: 'rgba(255, 255, 255, 0.03)',
-                                border: `1px solid ${passwordsMismatch ? 'rgba(240, 150, 130, 0.4)' : passwordsMatch ? 'rgba(80, 180, 145, 0.4)' : 'rgba(104, 178, 160, 0.12)'}`,
-                                color: '#deeee6',
+                                border: `1px solid ${passwordsMismatch ? 'rgba(180, 100, 70, 0.4)' : passwordsMatch ? 'rgba(85, 130, 75, 0.4)' : 'rgba(95, 120, 80, 0.12)'}`,
+                                color: '#dce8d8',
                                 fontFamily: 'var(--font-sans)',
                                 fontSize: '0.9375rem',
                                 fontWeight: '300',
                             }}
-                            onFocus={e => e.target.style.borderColor = passwordsMismatch ? 'rgba(240, 150, 130, 0.5)' : passwordsMatch ? 'rgba(80, 180, 145, 0.5)' : 'rgba(104, 178, 160, 0.35)'}
-                            onBlur={e => e.target.style.borderColor = passwordsMismatch ? 'rgba(240, 150, 130, 0.4)' : passwordsMatch ? 'rgba(80, 180, 145, 0.4)' : 'rgba(104, 178, 160, 0.12)'}
+                            onFocus={e => e.target.style.borderColor = passwordsMismatch ? 'rgba(180, 100, 70, 0.5)' : passwordsMatch ? 'rgba(85, 130, 75, 0.5)' : 'rgba(95, 120, 80, 0.35)'}
+                            onBlur={e => e.target.style.borderColor = passwordsMismatch ? 'rgba(180, 100, 70, 0.4)' : passwordsMatch ? 'rgba(85, 130, 75, 0.4)' : 'rgba(95, 120, 80, 0.12)'}
                         />
                         {passwordsMismatch && (
-                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(240, 150, 130, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
+                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(180, 100, 70, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
                                 Passwords don't match
                             </p>
                         )}
                         {passwordsMatch && (
-                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(100, 190, 160, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
-                                Passwords match ✓
+                            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(95, 145, 85, 0.7)', fontWeight: '300', marginTop: '0.4rem' }}>
+                                Passwords match
                             </p>
                         )}
                     </div>
 
                     {/* Error */}
                     {error && (
-                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8125rem', color: 'rgba(240, 150, 130, 0.8)', fontWeight: '300' }}>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8125rem', color: 'rgba(180, 100, 70, 0.8)', fontWeight: '300' }}>
                             {error}
                         </p>
                     )}
@@ -288,13 +299,13 @@ export default function SignUp() {
                             disabled={isLoading}
                             className="w-full py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
                             style={{
-                                background: 'linear-gradient(135deg, rgba(80, 160, 145, 0.85) 0%, rgba(56, 130, 120, 0.9) 100%)',
-                                color: 'rgba(230, 245, 240, 0.95)',
+                                background: 'linear-gradient(135deg, rgba(75, 115, 65, 0.85) 0%, rgba(55, 90, 50, 0.9) 100%)',
+                                color: 'rgba(220, 235, 210, 0.95)',
                                 fontFamily: 'var(--font-sans)',
                                 fontWeight: '500',
                                 fontSize: '0.9375rem',
-                                border: '1px solid rgba(104, 178, 160, 0.2)',
-                                boxShadow: '0 4px 20px rgba(56, 130, 120, 0.15)',
+                                border: '1px solid rgba(95, 120, 80, 0.2)',
+                                boxShadow: '0 4px 20px rgba(55, 90, 50, 0.15)',
                             }}
                         >
                             {isLoading ? 'Creating account...' : 'Create account'}
@@ -309,9 +320,9 @@ export default function SignUp() {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="flex items-center gap-4 my-6"
                 >
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(104, 178, 160, 0.1)' }} />
-                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.3)', fontWeight: '300' }}>or</span>
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(104, 178, 160, 0.1)' }} />
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(95, 120, 80, 0.1)' }} />
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(150, 170, 135, 0.3)', fontWeight: '300' }}>or</span>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(95, 120, 80, 0.1)' }} />
                 </motion.div>
 
                 {/* Sign in link */}
@@ -320,12 +331,12 @@ export default function SignUp() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="text-center"
-                    style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(140, 180, 165, 0.4)', fontWeight: '300' }}
+                    style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(150, 170, 135, 0.4)', fontWeight: '300' }}
                 >
                     Already have an account?{' '}
                     <Link
                         to="/sign-in"
-                        style={{ color: 'rgba(120, 190, 170, 0.8)', textDecoration: 'none', fontWeight: '400' }}
+                        style={{ color: 'rgba(95, 145, 85, 0.8)', textDecoration: 'none', fontWeight: '400' }}
                     >
                         Sign in
                     </Link>
