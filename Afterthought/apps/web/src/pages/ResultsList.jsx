@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
+import { getSessions } from '../api/session';
 
 const priorityColors = {
   urgent: 'rgba(180, 100, 70, 0.92)',
@@ -59,8 +61,37 @@ function calculateProgress(task) {
 
 export default function ResultsList() {
   const navigate = useNavigate();
-  const { currentSession, toggleTaskComplete, toggleSubtaskComplete } = useSession();
+  const { currentSession, setRestoredSession, toggleTaskComplete, toggleSubtaskComplete } = useSession();
   const { user, signOut } = useAuth();
+  const [isLoading, setIsLoading] = useState(!currentSession);
+
+  useEffect(() => {
+    if (currentSession?.tasks) {
+      setIsLoading(false);
+      return;
+    }
+    if (!user?.id) return;
+
+    let cancelled = false;
+    async function restore() {
+      try {
+        const sessions = await getSessions(user.id);
+        if (cancelled) return;
+        if (sessions && sessions.length > 0) {
+          setRestoredSession(sessions[0]);
+        } else {
+          navigate('/', { replace: true });
+        }
+      } catch (err) {
+        console.error('Failed to restore session:', err);
+        if (!cancelled) navigate('/', { replace: true });
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+    restore();
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   const handleSignOut = () => {
     navigate('/', { replace: true });
@@ -68,9 +99,18 @@ export default function ResultsList() {
     window.location.reload();
   };
 
-  if (!currentSession || !currentSession.tasks) {
-    navigate('/');
-    return null;
+  if (isLoading || !currentSession?.tasks) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#141e16' }}>
+        <motion.div
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          style={{ color: 'rgba(150, 170, 135, 0.6)', fontFamily: 'var(--font-sans)', fontSize: '1rem' }}
+        >
+          Restoring your session…
+        </motion.div>
+      </div>
+    );
   }
 
   const tasks = currentSession.tasks;

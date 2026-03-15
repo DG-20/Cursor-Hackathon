@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
+import { getSessions } from '../api/session';
 
 // Earthy greens & browns — forest floor palette
 const priorityColors = {
@@ -141,10 +142,39 @@ function curvePath(x1, y1, x2, y2, bend = 0.3) {
 
 export default function MindMap() {
   const navigate = useNavigate();
-  const { currentSession } = useSession();
+  const { currentSession, setRestoredSession } = useSession();
   const { user, signOut } = useAuth();
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(!currentSession);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (currentSession?.tasks) {
+      setIsLoading(false);
+      return;
+    }
+    if (!user?.id) return;
+
+    let cancelled = false;
+    async function restore() {
+      try {
+        const sessions = await getSessions(user.id);
+        if (cancelled) return;
+        if (sessions && sessions.length > 0) {
+          setRestoredSession(sessions[0]);
+        } else {
+          navigate('/', { replace: true });
+        }
+      } catch (err) {
+        console.error('Failed to restore session:', err);
+        if (!cancelled) navigate('/', { replace: true });
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+    restore();
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   // Pan & zoom: initial view shows whole map (same as viewBox -280 -320 560 540); then user can pan/zoom
   const [zoom, setZoom] = useState(1);
@@ -198,9 +228,18 @@ export default function MindMap() {
     window.location.reload();
   };
 
-  if (!currentSession?.tasks?.length) {
-    navigate('/results/list');
-    return null;
+  if (isLoading || !currentSession?.tasks?.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: EARTH.bg }}>
+        <motion.div
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          style={{ color: EARTH.textDim, fontFamily: 'var(--font-sans)', fontSize: '1rem' }}
+        >
+          Restoring your session…
+        </motion.div>
+      </div>
+    );
   }
 
   const tasks = hideCompleted

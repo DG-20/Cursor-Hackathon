@@ -1,18 +1,17 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './components/HomePage';
-import Hero from './pages/Hero';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
 import MindMap from './pages/MindMap';
 import Journal from './pages/Journal';
-import Landing from './pages/Hero';
 
 export const router = createBrowserRouter([
   { path: '/', Component: HomePage },
   { path: '/sign-in', Component: SignIn },
+  { path: '/signin', Component: SignIn },
   { path: '/signup', Component: SignUp },
   { path: '/landing', element: <Navigate to="/" replace /> },
   {
@@ -21,47 +20,7 @@ export const router = createBrowserRouter([
       { path: '/loading', Component: Loading },
       { path: '/results/list', Component: ResultsList },
       { path: '/results/mindmap', Component: MindMap },
+      { path: '/journal', Component: Journal },
     ],
   },
-  {
-    path: '/landing',
-    Component: Landing,
-  },
-  {
-    path: '/loading',
-    Component: Loading,
-  },
-  {
-    path: '/results/list',
-    Component: ResultsList,
-  },
-  {
-    path: '/signup',
-    Component: SignUp,
-  },
-  {
-    path: '/signin',
-    Component: SignIn,
-  },
-  {
-    path: '/journal',
-    Component: Journal,
-  }
-
-  //   {
-  //     path: '/results/kanban',
-  //     Component: ResultsKanban,
-  //   },
-  //   {
-  //     path: '/results/mindmap',
-  //     Component: ResultsMindMap,
-  //   },
-  //   {
-  //     path: '/journal',
-  //     Component: Journal,
-  //   },
-  //   {
-  //     path: '*',
-  //     Component: NotFound,
-  //   },
 ]);
