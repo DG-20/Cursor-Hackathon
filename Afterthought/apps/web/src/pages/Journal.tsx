@@ -125,7 +125,7 @@ export default function Journal() {
                     >
                         <button
                             type="button"
-                            onClick={() => navigate('/app')}
+                            onClick={() => navigate('/landing')}
                             className="px-3 py-2 rounded-lg transition-all cursor-pointer duration-200"
                             style={{
                                 background: 'rgba(75, 120, 65, 0.15)',
