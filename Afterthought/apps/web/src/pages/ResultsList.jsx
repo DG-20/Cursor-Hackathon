@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
@@ -37,20 +36,31 @@ const statusConfig = {
   },
 };
 
+// Calculate status based on subtask completion
 function calculateTaskStatus(task) {
-  if (!task.subtasks || task.subtasks.length === 0) return task.completed ? 'done' : 'todo';
+  if (!task.subtasks || task.subtasks.length === 0) {
+    // Tasks without subtasks use their completed flag
+    return task.completed ? 'done' : 'todo';
+  }
+
   const completedCount = task.subtasks.filter(st => st.completed).length;
   const totalCount = task.subtasks.length;
   const percentage = (completedCount / totalCount) * 100;
+
   if (percentage === 0) return 'todo';
   if (percentage === 100) return 'done';
   return 'in-progress';
 }
 
+// Calculate completion percentage
 function calculateProgress(task) {
-  if (!task.subtasks || task.subtasks.length === 0) return task.completed ? 100 : 0;
+  if (!task.subtasks || task.subtasks.length === 0) {
+    return task.completed ? 100 : 0;
+  }
+
   const completedCount = task.subtasks.filter(st => st.completed).length;
-  return Math.round((completedCount / task.subtasks.length) * 100);
+  const totalCount = task.subtasks.length;
+  return Math.round((completedCount / totalCount) * 100);
 }
 
 export default function ResultsList() {
@@ -62,21 +72,6 @@ export default function ResultsList() {
     navigate('/', { replace: true });
     signOut();
     window.location.reload();
-  };
-
-  const handleAddSubtask = (taskId) => {
-    const title = newSubtaskInputs[taskId]?.trim();
-    if (!title) return;
-    addSubtask(taskId, title);
-    setNewSubtaskInputs(prev => ({ ...prev, [taskId]: '' }));
-  };
-
-  const handleSubtaskTitleBlur = (taskId, subtaskId) => {
-    if (editingSubtaskValue.trim()) {
-      updateSubtaskTitle(taskId, subtaskId, editingSubtaskValue.trim());
-    }
-    setEditingSubtask(null);
-    setEditingSubtaskValue('');
   };
 
   if (!currentSession || !currentSession.tasks) {
@@ -175,7 +170,7 @@ export default function ResultsList() {
             textAlign: 'center',
           }}
         >
-          {new Date().toLocaleDateString('en-US', {
+          {new Date().toLocaleDateString('en-US', { 
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -190,7 +185,6 @@ export default function ResultsList() {
           const status = calculateTaskStatus(task);
           const progress = calculateProgress(task);
           const statusInfo = statusConfig[status];
-          const isEditing = editingTaskId === task.id;
 
           return (
             <motion.div
@@ -203,11 +197,10 @@ export default function ResultsList() {
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid rgba(104, 178, 160, 0.12)',
                 backdropFilter: 'blur(10px)',
-                transition: 'border-color 0.2s',
               }}
             >
               <div className="flex items-start gap-4">
-                {/* Checkbox for tasks without subtasks */}
+                {/* Checkbox (only for tasks without subtasks) */}
                 {(!task.subtasks || task.subtasks.length === 0) && (
                   <button
                     onClick={() => toggleTaskComplete(task.id)}
@@ -222,7 +215,7 @@ export default function ResultsList() {
                 )}
 
                 <div className="flex-1">
-                  {/* Title row */}
+                  {/* Title and Status */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <h3
                       className={status === 'done' ? 'line-through' : ''}
@@ -236,28 +229,21 @@ export default function ResultsList() {
                     >
                       {task.title}
                     </h3>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="px-2.5 py-1 rounded-lg text-xs whitespace-nowrap"
-                        style={{ background: statusInfo.bgColor, color: statusInfo.color, fontFamily: 'var(--font-sans)', fontWeight: '600', letterSpacing: '0.025em' }}
-                      >
-                        {statusInfo.label}
-                      </span>
-                      {/* Edit toggle */}
-                      <button
-                        onClick={() => setEditingTaskId(isEditing ? null : task.id)}
-                        className="p-1.5 rounded-lg transition-all duration-200"
-                        style={{
-                          background: isEditing ? 'rgba(104, 178, 160, 0.15)' : 'transparent',
-                          color: isEditing ? 'rgba(120, 190, 170, 0.9)' : 'var(--clarity-text-muted)',
-                        }}
-                      >
-                        <Pencil size={14} />
-                      </button>
-                    </div>
+                    <span
+                      className="px-2.5 py-1 rounded-lg text-xs whitespace-nowrap"
+                      style={{
+                        background: statusInfo.bgColor,
+                        color: statusInfo.color,
+                        fontFamily: 'var(--font-sans)',
+                        fontWeight: '600',
+                        letterSpacing: '0.025em',
+                      }}
+                    >
+                      {statusInfo.label}
+                    </span>
                   </div>
 
-                  {/* Progress bar */}
+                  {/* Progress Bar */}
                   {task.subtasks && task.subtasks.length > 0 && (
                     <div className="mb-3">
                       <div className="flex items-center justify-between mb-1.5">
@@ -290,7 +276,9 @@ export default function ResultsList() {
                       >
                         <motion.div
                           className="h-full rounded-full"
-                          style={{ background: statusInfo.color }}
+                          style={{
+                            background: statusInfo.color,
+                          }}
                           initial={{ width: 0 }}
                           animate={{ width: `${progress}%` }}
                           transition={{ duration: 0.8, delay: index * 0.1 + 0.2 }}
@@ -301,6 +289,7 @@ export default function ResultsList() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-3">
+                    {/* Priority badge */}
                     <span
                       className="px-3 py-1 rounded-full text-xs"
                       style={{
@@ -312,6 +301,8 @@ export default function ResultsList() {
                     >
                       {priorityLabels[task.priority]}
                     </span>
+
+                    {/* Category pill */}
                     <span
                       className="px-3 py-1 rounded-full text-xs"
                       style={{
@@ -339,95 +330,21 @@ export default function ResultsList() {
                             ) : (
                               <Circle size={16} style={{ color: 'rgba(140, 180, 165, 0.5)' }} />
                             )}
-
-                            {/* Delete button — only in edit mode */}
-                            {isEditing && (
-                              <button
-                                onClick={() => deleteSubtask(task.id, subtask.id)}
-                                className="shrink-0 p-1 rounded transition-all duration-200"
-                                style={{ color: 'rgba(240, 150, 130, 0.5)' }}
-                                onMouseEnter={e => e.currentTarget.style.color = 'rgba(240, 150, 130, 0.9)'}
-                                onMouseLeave={e => e.currentTarget.style.color = 'rgba(240, 150, 130, 0.5)'}
-                              >
-                                <Trash2 size={13} />
-                              </button>
-                            )}
-                        </div>
-                      );
-                      })}
-
-                      {/* Add subtask row — only in edit mode */}
-                      {isEditing && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="flex items-center gap-3 pt-1"
-                        >
-                          <Plus size={16} style={{ color: 'rgba(120, 190, 170, 0.5)', flexShrink: 0 }} />
-                          <input
-                            value={newSubtaskInputs[task.id] || ''}
-                            onChange={e => setNewSubtaskInputs(prev => ({ ...prev, [task.id]: e.target.value }))}
-                            onKeyDown={e => {
-                              if (e.key === 'Enter') handleAddSubtask(task.id);
-                            }}
-                            placeholder="Add a subtask..."
-                            className="flex-1 px-2 py-1 rounded-lg focus:outline-none text-sm"
+                          </button>
+                          <span
+                            className={subtask.completed ? 'line-through' : ''}
                             style={{
-                              background: 'rgba(255,255,255,0.03)',
-                              border: '1px solid rgba(104, 178, 160, 0.15)',
-                              color: 'var(--clarity-text-primary)',
                               fontFamily: 'var(--font-sans)',
                               fontSize: '0.875rem',
                               color: subtask.completed ? 'rgba(140, 180, 165, 0.5)' : 'rgba(200, 220, 210, 0.85)',
                               fontWeight: '300',
                             }}
-                            onFocus={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.35)'}
-                            onBlur={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.15)'}
-                          />
-                          <button
-                            onClick={() => handleAddSubtask(task.id)}
-                            className="p-1.5 rounded-lg transition-all duration-200"
-                            style={{ background: 'rgba(80, 160, 145, 0.2)', color: 'rgba(120, 190, 170, 0.9)' }}
                           >
-                            <Check size={13} />
-                          </button>
-                        </motion.div>
-                      )}
+                            {subtask.title}
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  )}
-
-                  {/* Add subtasks to a task that has none — only in edit mode */}
-                  {isEditing && (!task.subtasks || task.subtasks.length === 0) && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-3 mt-3 pt-3 border-t border-[var(--clarity-glass-border)]"
-                    >
-                      <Plus size={16} style={{ color: 'rgba(120, 190, 170, 0.5)', flexShrink: 0 }} />
-                      <input
-                        value={newSubtaskInputs[task.id] || ''}
-                        onChange={e => setNewSubtaskInputs(prev => ({ ...prev, [task.id]: e.target.value }))}
-                        onKeyDown={e => { if (e.key === 'Enter') handleAddSubtask(task.id); }}
-                        placeholder="Add a subtask..."
-                        className="flex-1 px-2 py-1 rounded-lg focus:outline-none text-sm"
-                        style={{
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '1px solid rgba(104, 178, 160, 0.15)',
-                          color: 'var(--clarity-text-primary)',
-                          fontFamily: 'var(--font-sans)',
-                          fontWeight: '300',
-                        }}
-                        onFocus={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.35)'}
-                        onBlur={e => e.target.style.borderColor = 'rgba(104, 178, 160, 0.15)'}
-                      />
-                      <button
-                        onClick={() => handleAddSubtask(task.id)}
-                        className="p-1.5 rounded-lg"
-                        style={{ background: 'rgba(80, 160, 145, 0.2)', color: 'rgba(120, 190, 170, 0.9)' }}
-                      >
-                        <Check size={13} />
-                      </button>
-                    </motion.div>
                   )}
                 </div>
               </div>
