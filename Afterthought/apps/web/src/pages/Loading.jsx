@@ -104,14 +104,14 @@ export default function Loading() {
 
   useEffect(() => {
     if (!dataReady) return;
-    const fadeTimer = setTimeout(() => setPhase('fading'), 400);
+    const fadeTimer = setTimeout(() => setPhase('fading'), 300);
     return () => clearTimeout(fadeTimer);
   }, [dataReady]);
 
   useEffect(() => {
     if (phase !== 'fading') return;
-    const farewellTimer = setTimeout(() => setPhase('farewell'), 1000);
-    const navigateTimer = setTimeout(() => navigate('/results/list'), 2800);
+    const farewellTimer = setTimeout(() => setPhase('farewell'), 600);
+    const navigateTimer = setTimeout(() => navigate('/results/list'), 1600);
     return () => {
       clearTimeout(farewellTimer);
       clearTimeout(navigateTimer);
@@ -119,7 +119,7 @@ export default function Loading() {
   }, [phase, navigate]);
 
   useEffect(() => {
-    const fallback = setTimeout(() => navigate('/results/list'), 12000);
+    const fallback = setTimeout(() => navigate('/results/list'), 4000);
     return () => clearTimeout(fallback);
   }, [navigate]);
 

@@ -30,8 +30,8 @@ const EARTH = {
   orb2: 'rgba(110, 90, 60, 0.07)',                     // soil orb
 };
 
-const CENTER_R = 200;
-const SUBTASK_R = 98;
+const CENTER_R = 260;
+const SUBTASK_R = 120;
 const MIN_TASK_R = 26;
 const MAX_TASK_R = 60;
 const MIN_SUBTASK_R = 18;
