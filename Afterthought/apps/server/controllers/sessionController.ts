@@ -60,3 +60,25 @@ export async function processSpeech(req: Request, res: Response) {
     res.status(500).json({ error: message });
   }
 }
+
+export async function getSessions(req: Request, res: Response) {
+  try {
+    const { data, error } = await supabase
+      .from('sessions')
+      .select('id, created_at, tasks, journal')
+      .is('user_id', null)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Supabase fetch error:', error.message);
+      res.status(500).json({ error: 'Failed to fetch sessions' });
+      return;
+    }
+
+    res.json(data);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to fetch sessions';
+    console.error('getSessions error:', message);
+    res.status(500).json({ error: message });
+  }
+}
