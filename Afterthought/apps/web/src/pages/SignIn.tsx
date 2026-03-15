@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import signIn from '../api/session.js';
+import { signIn as signInApi } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -11,18 +12,20 @@ export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) return;
     setIsLoading(true);
     setError(null);
     try {
-      const { error: authError } = await signIn({ email, password });
-      if (authError) throw authError;
-      navigate('/app');
+      const data = await signInApi(email.trim(), password);
+      setAuth(data.user, data.session);
+      navigate('/');
+      window.location.reload();
     } catch (err) {
-      setError('Incorrect email or password. Please try again.');
+      setError(err instanceof Error ? err.message : 'Incorrect email or password. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -34,28 +37,28 @@ export default function SignIn() {
       style={{ background: '#0d1f1e' }}
     >
 
-      {/* Background orbs */}
+      {/* Background orbs — same as SignUp */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute rounded-full"
           style={{
             width: '500px', height: '500px',
-            top: '-150px', right: '-150px',
+            top: '-150px', left: '-150px',
             background: 'radial-gradient(circle, rgba(56, 178, 172, 0.1) 0%, transparent 70%)',
             filter: 'blur(50px)',
           }}
-          animate={{ x: [0, -25, 0], y: [0, 20, 0] }}
+          animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute rounded-full"
           style={{
             width: '500px', height: '500px',
-            bottom: '-150px', left: '-150px',
+            bottom: '-150px', right: '-150px',
             background: 'radial-gradient(circle, rgba(104, 157, 140, 0.08) 0%, transparent 70%)',
             filter: 'blur(50px)',
           }}
-          animate={{ x: [0, 20, 0], y: [0, -25, 0] }}
+          animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
           transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
@@ -149,19 +152,11 @@ export default function SignIn() {
             />
           </div>
 
-          {/* Password */}
+          {/* Password — same format as SignUp */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                Password
-              </label>
-              <button
-                type="button"
-                style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(120, 190, 170, 0.5)', fontWeight: '300', background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                Forgot password?
-              </button>
-            </div>
+            <label style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(140, 180, 165, 0.5)', fontWeight: '400', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+              Password
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}

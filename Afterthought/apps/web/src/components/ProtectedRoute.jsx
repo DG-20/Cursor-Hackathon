@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import ProtectedLayout from './ProtectedLayout';
 
 /**
- * Wraps routes that require login. Redirects to /sign-in if not logged in.
+ * Wraps routes that require login. Redirects to / (landing) if not logged in.
  * Waits for auth state to be restored from storage before redirecting.
  */
 export default function ProtectedRoute() {
@@ -13,7 +13,7 @@ export default function ProtectedRoute() {
 
   useEffect(() => {
     if (isReady && !isLoggedIn) {
-      navigate('/sign-in', { replace: true });
+      navigate('/', { replace: true });
     }
   }, [isReady, isLoggedIn, navigate]);
 

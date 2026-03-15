@@ -1,13 +1,14 @@
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
-import { X, CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
+import { useAuth } from '../context/AuthContext';
 
 const priorityColors = {
-  urgent: 'var(--priority-urgent)',
-  high: 'var(--priority-high)',
-  medium: 'var(--priority-medium)',
-  low: 'var(--priority-low)',
+  urgent: 'rgba(240, 150, 130, 0.95)',
+  high: 'rgba(120, 190, 170, 0.9)',
+  medium: 'rgba(160, 200, 185, 0.8)',
+  low: 'rgba(140, 180, 165, 0.6)',
 };
 
 const priorityLabels = {
@@ -20,18 +21,18 @@ const priorityLabels = {
 const statusConfig = {
   todo: {
     label: 'TODO',
-    color: 'var(--clarity-text-muted)',
-    bgColor: 'rgba(100, 116, 139, 0.1)',
+    color: 'rgba(140, 180, 165, 0.5)',
+    bgColor: 'rgba(104, 178, 160, 0.08)',
   },
   'in-progress': {
     label: 'IN PROGRESS',
-    color: 'var(--clarity-indigo)',
-    bgColor: 'rgba(99, 102, 241, 0.1)',
+    color: 'rgba(120, 190, 170, 0.9)',
+    bgColor: 'rgba(80, 160, 145, 0.15)',
   },
   done: {
     label: 'DONE',
-    color: '#10b981',
-    bgColor: 'rgba(16, 185, 129, 0.1)',
+    color: 'rgba(100, 200, 160, 0.95)',
+    bgColor: 'rgba(80, 180, 140, 0.12)',
   },
 };
 
@@ -64,11 +65,13 @@ function calculateProgress(task) {
 
 export default function ResultsList() {
   const navigate = useNavigate();
-  const { currentSession, endSession, toggleTaskComplete, toggleSubtaskComplete } = useSession();
+  const { currentSession, toggleTaskComplete, toggleSubtaskComplete } = useSession();
+  const { user, signOut } = useAuth();
 
-  const handleEndSession = () => {
-    endSession();
-    navigate('/');
+  const handleSignOut = () => {
+    navigate('/', { replace: true });
+    signOut();
+    window.location.reload();
   };
 
   if (!currentSession || !currentSession.tasks) {
@@ -79,13 +82,38 @@ export default function ResultsList() {
   const tasks = currentSession.tasks;
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 relative overflow-hidden" style={{ background: '#0d1f1e' }}>
+      {/* Background orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '500px', height: '500px',
+            top: '-150px', left: '-150px',
+            background: 'radial-gradient(circle, rgba(56, 178, 172, 0.1) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+          animate={{ x: [0, 25, 0], y: [0, 20, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '500px', height: '500px',
+            bottom: '-150px', right: '-150px',
+            background: 'radial-gradient(circle, rgba(104, 157, 140, 0.08) 0%, transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+          animate={{ x: [0, -20, 0], y: [0, -25, 0] }}
+          transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
       {/* Top bar */}
       <div
-        className="sticky top-0 z-10 px-6 py-4 mb-6"
+        className="sticky top-0 z-10 px-6 py-4 mb-6 relative"
         style={{
-          background: 'var(--clarity-bg-deep)',
-          borderBottom: '1px solid var(--clarity-glass-border)',
+          background: 'rgba(13, 31, 30, 0.85)',
+          borderBottom: '1px solid rgba(104, 178, 160, 0.12)',
           backdropFilter: 'blur(10px)',
         }}
       >
@@ -94,9 +122,9 @@ export default function ResultsList() {
             onClick={() => navigate('/results/mindmap')}
             className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
             style={{
-              background: 'var(--clarity-glass-bg)',
-              border: '1px solid var(--clarity-glass-border)',
-              color: 'var(--clarity-text-secondary)',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(104, 178, 160, 0.12)',
+              color: 'rgba(160, 200, 185, 0.8)',
               fontFamily: 'var(--font-sans)',
               fontSize: '0.875rem',
             }}
@@ -104,27 +132,28 @@ export default function ResultsList() {
             <ArrowLeft size={16} />
             Back to Map
           </button>
-          <button
-            onClick={handleEndSession}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
-            style={{
-              background: 'var(--clarity-glass-bg)',
-              border: '1px solid var(--clarity-glass-border)',
-              color: 'var(--clarity-text-secondary)',
-              fontFamily: 'var(--font-sans)',
-              fontSize: '0.875rem',
-            }}
+          <div
+            className="flex items-center gap-3"
+            style={{ fontFamily: 'var(--font-sans)', fontSize: '0.875rem', color: 'rgba(160, 200, 185, 0.8)' }}
           >
-            <X size={16} />
-            End Session
-          </button>
+            <span className="font-medium">
+              {user?.first_name || user?.email?.split('@')[0] || 'You'}
+            </span>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="hover:underline"
+            >
+              Sign out
+            </button>
+          </div>
         </div>
 
         <h1
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: '1.75rem',
-            color: 'var(--clarity-text-primary)',
+            color: '#e8ede8',
             fontWeight: '500',
             textAlign: 'center',
             marginBottom: '0.5rem',
@@ -136,7 +165,7 @@ export default function ResultsList() {
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: '0.875rem',
-            color: 'var(--clarity-text-secondary)',
+            color: 'rgba(160, 200, 185, 0.6)',
             fontWeight: '400',
             textAlign: 'center',
           }}
@@ -151,7 +180,7 @@ export default function ResultsList() {
       </div>
 
       {/* Task list */}
-      <div className="px-6 space-y-4">
+      <div className="px-6 space-y-4 relative z-10">
         {tasks.map((task, index) => {
           const status = calculateTaskStatus(task);
           const progress = calculateProgress(task);
@@ -165,8 +194,8 @@ export default function ResultsList() {
               transition={{ duration: 0.4, delay: index * 0.1 }}
               className="rounded-2xl p-5"
               style={{
-                background: 'var(--clarity-glass-bg)',
-                border: '1px solid var(--clarity-glass-border)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(104, 178, 160, 0.12)',
                 backdropFilter: 'blur(10px)',
               }}
             >
@@ -178,9 +207,9 @@ export default function ResultsList() {
                     className="mt-1 transition-all duration-300"
                   >
                     {task.completed ? (
-                      <CheckCircle2 size={20} style={{ color: 'var(--clarity-indigo)' }} />
+                      <CheckCircle2 size={20} style={{ color: 'rgba(120, 190, 170, 0.9)' }} />
                     ) : (
-                      <Circle size={20} style={{ color: 'var(--clarity-text-muted)' }} />
+                      <Circle size={20} style={{ color: 'rgba(140, 180, 165, 0.5)' }} />
                     )}
                   </button>
                 )}
@@ -193,7 +222,7 @@ export default function ResultsList() {
                       style={{
                         fontFamily: 'var(--font-sans)',
                         fontSize: '1.0625rem',
-                        color: 'var(--clarity-text-primary)',
+                        color: '#deeee6',
                         fontWeight: '500',
                         flex: 1,
                       }}
@@ -222,7 +251,7 @@ export default function ResultsList() {
                           style={{
                             fontFamily: 'var(--font-sans)',
                             fontSize: '0.75rem',
-                            color: 'var(--clarity-text-secondary)',
+                            color: 'rgba(160, 200, 185, 0.6)',
                             fontWeight: '400',
                           }}
                         >
@@ -242,7 +271,7 @@ export default function ResultsList() {
                       <div
                         className="w-full h-2 rounded-full overflow-hidden"
                         style={{
-                          background: 'rgba(100, 116, 139, 0.2)',
+                          background: 'rgba(104, 178, 160, 0.15)',
                         }}
                       >
                         <motion.div
@@ -264,7 +293,7 @@ export default function ResultsList() {
                     <span
                       className="px-3 py-1 rounded-full text-xs"
                       style={{
-                        background: `${priorityColors[task.priority]}20`,
+                        background: 'rgba(104, 178, 160, 0.15)',
                         color: priorityColors[task.priority],
                         fontFamily: 'var(--font-sans)',
                         fontWeight: '500',
@@ -277,9 +306,9 @@ export default function ResultsList() {
                     <span
                       className="px-3 py-1 rounded-full text-xs"
                       style={{
-                        background: 'var(--clarity-glass-bg)',
-                        border: '1px solid var(--clarity-glass-border)',
-                        color: 'var(--clarity-text-secondary)',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(104, 178, 160, 0.12)',
+                        color: 'rgba(160, 200, 185, 0.8)',
                         fontFamily: 'var(--font-sans)',
                       }}
                     >
@@ -289,7 +318,7 @@ export default function ResultsList() {
 
                   {/* Subtasks */}
                   {task.subtasks && task.subtasks.length > 0 && (
-                    <div className="space-y-2 pl-2 pt-2 border-t border-[var(--clarity-glass-border)]">
+                    <div className="space-y-2 pl-2 pt-2 border-t" style={{ borderColor: 'rgba(104, 178, 160, 0.12)' }}>
                       {task.subtasks.map((subtask) => (
                         <div key={subtask.id} className="flex items-center gap-3">
                           <button
@@ -297,9 +326,9 @@ export default function ResultsList() {
                             className="transition-all duration-300"
                           >
                             {subtask.completed ? (
-                              <CheckCircle2 size={16} style={{ color: 'var(--clarity-indigo)' }} />
+                              <CheckCircle2 size={16} style={{ color: 'rgba(120, 190, 170, 0.9)' }} />
                             ) : (
-                              <Circle size={16} style={{ color: 'var(--clarity-text-muted)' }} />
+                              <Circle size={16} style={{ color: 'rgba(140, 180, 165, 0.5)' }} />
                             )}
                           </button>
                           <span
@@ -307,7 +336,7 @@ export default function ResultsList() {
                             style={{
                               fontFamily: 'var(--font-sans)',
                               fontSize: '0.875rem',
-                              color: subtask.completed ? 'var(--clarity-text-muted)' : 'var(--clarity-text-secondary)',
+                              color: subtask.completed ? 'rgba(140, 180, 165, 0.5)' : 'rgba(200, 220, 210, 0.85)',
                               fontWeight: '300',
                             }}
                           >
@@ -325,15 +354,16 @@ export default function ResultsList() {
       </div>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 px-6 py-4" style={{ background: 'var(--clarity-bg-deep)' }}>
+      <div className="fixed bottom-0 left-0 right-0 px-6 py-4 relative z-10" style={{ background: 'rgba(13, 31, 30, 0.95)', borderTop: '1px solid rgba(104, 178, 160, 0.12)' }}>
         <Link
           to="/journal"
           className="block w-full py-4 rounded-2xl text-center transition-all duration-300"
           style={{
-            background: 'var(--clarity-indigo)',
-            color: '#ffffff',
+            background: 'linear-gradient(135deg, rgba(80, 160, 145, 0.85) 0%, rgba(56, 130, 120, 0.9) 100%)',
+            color: 'rgba(230, 245, 240, 0.95)',
             fontFamily: 'var(--font-sans)',
             fontWeight: '500',
+            border: '1px solid rgba(104, 178, 160, 0.2)',
           }}
         >
           View Journal & Insights

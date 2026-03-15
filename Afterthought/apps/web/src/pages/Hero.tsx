@@ -262,7 +262,7 @@ export default function Landing() {
             Get Started
           </button>
           <button
-            onClick={() => navigate('/signin')}
+            onClick={() => navigate('/sign-in')}
             className="flex-1 py-3.5 rounded-2xl transition-all duration-300"
             style={{
               background: 'rgba(255, 255, 255, 0.03)',
@@ -337,7 +337,7 @@ export default function Landing() {
                   <ArrowRight size={17} />
                 </button>
                 <button
-                  onClick={() => navigate('/signin')}
+                  onClick={() => navigate('/sign-in')}
                   className="w-full flex items-center justify-between px-5 py-4 rounded-2xl transition-all duration-200"
                   style={{
                     background: 'rgba(255,255,255,0.03)',
