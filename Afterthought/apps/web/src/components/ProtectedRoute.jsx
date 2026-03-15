@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import ProtectedLayout from './ProtectedLayout';
 
 /**
  * Wraps routes that require login. Redirects to / (landing) if not logged in.
@@ -21,5 +20,5 @@ export default function ProtectedRoute() {
     return null;
   }
 
-  return <ProtectedLayout />;
+  return <Outlet />;
 }

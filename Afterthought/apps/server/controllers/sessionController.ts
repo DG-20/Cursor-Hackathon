@@ -61,6 +61,37 @@ export async function processSpeech(req: Request, res: Response) {
   }
 }
 
+export async function updateSessionTasks(req: Request, res: Response) {
+  try {
+    const { sessionId } = req.params;
+    const { tasks } = req.body ?? {};
+
+    if (!sessionId || !Array.isArray(tasks)) {
+      res.status(400).json({ error: 'Missing sessionId or tasks array' });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('sessions')
+      .update({ tasks })
+      .eq('id', sessionId)
+      .select('id, tasks')
+      .single();
+
+    if (error) {
+      console.error('Supabase update error:', error.message);
+      res.status(500).json({ error: 'Failed to update tasks' });
+      return;
+    }
+
+    res.json(data);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to update tasks';
+    console.error('updateSessionTasks error:', message);
+    res.status(500).json({ error: message });
+  }
+}
+
 export async function getSessions(req: Request, res: Response) {
   try {
     const { userId } = req.body ?? {};

@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './components/HomePage';
-import Hero from './pages/Hero';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp';
 import Loading from './pages/Loading';
@@ -14,6 +13,7 @@ import History from './pages/History';
 export const router = createBrowserRouter([
   { path: '/', Component: HomePage },
   { path: '/sign-in', Component: SignIn },
+  { path: '/signin', Component: SignIn },
   { path: '/signup', Component: SignUp },
   { path: '/landing', element: <Navigate to="/" replace /> },
   {
@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
       { path: '/loading', Component: Loading },
       { path: '/results/list', Component: ResultsList },
       { path: '/results/mindmap', Component: MindMap },
+      { path: '/journal', Component: Journal },
     ],
   },
   {
