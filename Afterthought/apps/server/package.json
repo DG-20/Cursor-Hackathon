@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch index.ts",
     "start": "node dist/index.js",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test:auth": "node scripts/test-auth.js"
   },
   "keywords": [],
   "author": "",

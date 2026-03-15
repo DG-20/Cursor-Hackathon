@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Mic, MicOff, Type } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
+import { useAuth } from '../context/AuthContext';
+import AppHeader from '../components/AppHeader';
 import processTranscript from '../api/session.js';
 
 export default function Landing() {
@@ -14,6 +16,7 @@ export default function Landing() {
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
   const { startSession, completeSession } = useSession();
+  const { user } = useAuth();
 
   // Cleanup on unmount
   useEffect(() => {
@@ -110,7 +113,8 @@ export default function Landing() {
   const activeInput = inputMode === 'voice' ? transcript : textInput;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+      <AppHeader />
       <div className="w-full max-w-md">
 
         {/* Logo */}
@@ -139,7 +143,9 @@ export default function Landing() {
             fontWeight: '400'
           }}
         >
-          What's on your mind today?
+          {user
+            ? `Hey ${user.first_name || user.email?.split('@')[0] || 'you'}, what's on your mind?`
+            : "What's on your mind today?"}
         </motion.h1>
 
         {/* Voice Input */}
