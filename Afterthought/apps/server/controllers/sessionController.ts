@@ -1,11 +1,8 @@
 import { Request, Response } from 'express';
 import { callGroq } from '../services/llm';
 import { preprocessTranscript } from '../utils/transcriptPreprocess';
+import { supabase } from '../lib/supabase';
 
-/**
- * Normalize LLM tasks for initial response: all tasks/subtasks are TODO (completed: false).
- * Later: this object will be sent to the DB service for storage (not implemented yet).
- */
 function mapTasksToFrontend(tasks: any[]): any[] {
   return tasks.map((t: any) => ({
     ...t,
@@ -16,11 +13,6 @@ function mapTasksToFrontend(tasks: any[]): any[] {
   }));
 }
 
-/**
- * POST /processSpeech — initial processing of voice/text dump.
- * Returns { tasks, journal } to the frontend. All tasks/subtasks are TODO.
- * TODO: persist this object to the database once DB service exists.
- */
 export async function processSpeech(req: Request, res: Response) {
   try {
     const { transcript } = req.body ?? {};
@@ -42,9 +34,26 @@ export async function processSpeech(req: Request, res: Response) {
       moods: Array.isArray(rawJournal?.moods) ? (rawJournal.moods as string[]) : [],
     };
 
-    console.log(tasks, journal);
+    // Persist to Supabase
+    const { data, error } = await supabase
+      .from('sessions')
+      .insert({
+        transcript: transcript.trim(),
+        tasks,
+        journal,
+        user_id: null,
+      })
+      .select('id')
+      .single();
 
-    res.json({ tasks, journal });
+    if (error) {
+      console.error('Supabase insert error:', error.message);
+      // Don't block the response if DB fails — still return to frontend
+      res.json({ tasks, journal });
+      return;
+    }
+
+    res.json({ id: data.id, tasks, journal });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to process speech';
     console.error('processSpeech error:', message);

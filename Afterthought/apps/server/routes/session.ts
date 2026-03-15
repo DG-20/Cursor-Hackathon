@@ -1,5 +1,7 @@
 import { Router } from 'express';
-import { processSpeech } from '../controllers/sessionController';
+import {
+  processSpeech
+} from '../controllers/sessionController';
 
 const router = Router();
 
