@@ -1,17 +1,28 @@
-import { createBrowserRouter } from 'react-router';
-import Landing from './pages/Landing';
+import { createBrowserRouter, Navigate } from 'react-router';
+import ProtectedRoute from './components/ProtectedRoute';
+import HomePage from './components/HomePage';
+import Hero from './pages/Hero';
+import SignIn from './pages/SignIn.tsx';
+import SignUp from './pages/SignUp';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
-// import Loading from './screens/Loading';
-// import ResultsList from './screens/ResultsList';
-// import ResultsKanban from './screens/ResultsKanban';
-// import ResultsMindMap from './screens/ResultsMindMap';
-// import Journal from './screens/Journal';
-// import NotFound from './screens/NotFound';
+import Journal from './pages/Journal';
+import Landing from './pages/Hero';
 
 export const router = createBrowserRouter([
+  { path: '/', Component: HomePage },
+  { path: '/sign-in', Component: SignIn },
+  { path: '/signup', Component: SignUp },
+  { path: '/landing', element: <Navigate to="/" replace /> },
   {
-    path: '/',
+    element: <ProtectedRoute />,
+    children: [
+      { path: '/loading', Component: Loading },
+      { path: '/results/list', Component: ResultsList },
+    ],
+  },
+  {
+    path: '/landing',
     Component: Landing,
   },
   {
@@ -22,20 +33,33 @@ export const router = createBrowserRouter([
     path: '/results/list',
     Component: ResultsList,
   },
-//   {
-//     path: '/results/kanban',
-//     Component: ResultsKanban,
-//   },
-//   {
-//     path: '/results/mindmap',
-//     Component: ResultsMindMap,
-//   },
-//   {
-//     path: '/journal',
-//     Component: Journal,
-//   },
-//   {
-//     path: '*',
-//     Component: NotFound,
-//   },
+  {
+    path: '/signup',
+    Component: SignUp,
+  },
+  {
+    path: '/signin',
+    Component: SignIn,
+  },
+  {
+    path: '/journal',
+    Component: Journal,
+  }
+
+  //   {
+  //     path: '/results/kanban',
+  //     Component: ResultsKanban,
+  //   },
+  //   {
+  //     path: '/results/mindmap',
+  //     Component: ResultsMindMap,
+  //   },
+  //   {
+  //     path: '/journal',
+  //     Component: Journal,
+  //   },
+  //   {
+  //     path: '*',
+  //     Component: NotFound,
+  //   },
 ]);
