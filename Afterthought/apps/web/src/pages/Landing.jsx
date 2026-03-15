@@ -100,7 +100,7 @@ export default function Landing() {
       ]);
 
       completeSession(data);
-      navigate('/results/list');
+      navigate('/results/mindmap');
     } catch (err) {
       setError('Failed to process your input. Please try again.');
       navigate('/');

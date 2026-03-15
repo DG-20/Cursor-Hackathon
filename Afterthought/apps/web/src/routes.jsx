@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router';
 import Landing from './pages/Landing';
 import Loading from './pages/Loading';
 import ResultsList from './pages/ResultsList';
+import ResultsMindMap from './pages/ResultsMindMap';
 // import Loading from './screens/Loading';
 // import ResultsList from './screens/ResultsList';
 // import ResultsKanban from './screens/ResultsKanban';
@@ -26,10 +27,10 @@ export const router = createBrowserRouter([
 //     path: '/results/kanban',
 //     Component: ResultsKanban,
 //   },
-//   {
-//     path: '/results/mindmap',
-//     Component: ResultsMindMap,
-//   },
+  {
+    path: '/results/mindmap',
+    Component: ResultsMindMap,
+  },
 //   {
 //     path: '/journal',
 //     Component: Journal,
